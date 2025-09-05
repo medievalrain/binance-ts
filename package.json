@@ -4,6 +4,7 @@
 	"private": true,
 	"description": "Binance API SDK",
 	"type": "module",
+	"license": "MIT",
 	"files": [
 		"dist"
 	],
