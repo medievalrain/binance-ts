@@ -1,10 +1,10 @@
 import { Client, Dispatcher } from "undici";
 
 import { ApiError, MalformedParamError, ValidationError, WeightError } from "./api-error";
-import { createHmac256 } from "./crypto";
 import type { ApiCredentials } from "@/types";
 import * as z4 from "zod/v4/core";
 import { ErrorResponseSchema } from "./schema";
+import { createHmac } from "node:crypto";
 
 export type RawSearchParams = Record<string, string | undefined | null | string[] | number | boolean>;
 
@@ -127,7 +127,7 @@ export class BaseRestClient {
 		const searchParams = this.toSearchParams(params);
 		if (this.credentials) {
 			searchParams["timestamp"] = new Date().getTime().toString();
-			const signature = createHmac256(new URLSearchParams(searchParams).toString(), this.credentials.secret);
+			const signature = this.sign(new URLSearchParams(searchParams).toString(), this.credentials.secret);
 			searchParams["signature"] = signature;
 		}
 
@@ -142,5 +142,9 @@ export class BaseRestClient {
 		});
 
 		return this.parseResponse(schema, response, endpoint);
+	}
+
+	private sign(message: string, secret: string) {
+		return createHmac("sha256", secret).update(message).digest("hex");
 	}
 }
