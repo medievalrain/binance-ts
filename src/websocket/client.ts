@@ -1,0 +1,141 @@
+import { EventEmitter } from "node:events";
+import { FuturesWebsocketEventSchema } from "./schema";
+import type { TypedEventEmitter } from "./typed-event-emitter";
+import type { FuturesConnectionErrorEvent, FuturesConnectionEvent, FuturesMarketEvent } from "./types";
+import { ValidationError } from "@/shared/api-error";
+import { WebSocket, MessageEvent } from "undici";
+
+type WebsocketClientEventMap = {
+	marketMessage: (data: FuturesMarketEvent) => void;
+	connectionMessage: (data: FuturesConnectionEvent) => void;
+	error: (error: Error | FuturesConnectionErrorEvent) => void;
+};
+type SubscriptionState = "SUBSCRIBED" | "PENDING_SUBSCRIPTION" | "PENDING_UNSUBSCRIPTION";
+
+export class BinanceWebsocketClient {
+	private socket: WebSocket;
+	private baseUrl: string;
+	private emitter = new EventEmitter() as TypedEventEmitter<WebsocketClientEventMap>;
+	private subscriptionId: number = 1;
+
+	private subscriptions = new Map<string, SubscriptionState>();
+
+	public on = this.emitter.on.bind(this.emitter);
+	public once = this.emitter.once.bind(this.emitter);
+	public off = this.emitter.off.bind(this.emitter);
+	public addListener = this.emitter.addListener.bind(this.emitter);
+	public removeListener = this.emitter.removeListener.bind(this.emitter);
+
+	constructor(baseUrl: string) {
+		this.baseUrl = baseUrl;
+		this.socket = this.createSocket();
+		this.parseEvent = this.parseEvent.bind(this);
+	}
+
+	private createSocket() {
+		if (this.socket) {
+			this.socket.removeEventListener("message", this.parseEvent);
+			this.socket.close();
+		}
+		const socket = new WebSocket(this.baseUrl);
+		socket.addEventListener("message", this.parseEvent);
+		return socket;
+	}
+
+	private sendMessage(data: object) {
+		this.socket.send(JSON.stringify(data));
+	}
+
+	private parseEvent(e: MessageEvent) {
+		if (typeof e.data !== "string") {
+			this.emitter.emit("error", new Error("Message event is not a string", { cause: e.data }));
+			return;
+		}
+		const data = JSON.parse(e.data);
+		const parsed = FuturesWebsocketEventSchema.safeParse(data);
+		if (parsed.error) {
+			this.emitter.emit("error", new ValidationError({ error: parsed.error, endpoint: "websocket", input: data }));
+			return;
+		}
+
+		if ("e" in parsed.data) {
+			this.emitter.emit("marketMessage", parsed.data);
+		} else {
+			this.emitter.emit("connectionMessage", parsed.data);
+		}
+	}
+
+	public async subscribe(...channels: string[]) {
+		await this.connect();
+		const pendingChannels: string[] = [];
+		for (const channel of channels) {
+			const existingChannelState = this.subscriptions.get(channel);
+			if (!existingChannelState) {
+				pendingChannels.push(channel);
+				this.subscriptions.set(channel, "PENDING_SUBSCRIPTION");
+			}
+		}
+		const id = this.subscriptionId;
+		const data = {
+			method: "SUBSCRIBE",
+			params: pendingChannels,
+			id,
+		};
+		this.subscriptionId += 1;
+
+		this.sendMessage(data);
+		return new Promise<void>((resolve, reject) => {
+			const handler: WebsocketClientEventMap["connectionMessage"] = (data) => {
+				if (data.id !== id) {
+					return;
+				}
+				this.emitter.removeListener("connectionMessage", handler);
+				if ("error" in data) {
+					for (const channel of pendingChannels) {
+						const existingChannelState = this.subscriptions.get(channel);
+						if (existingChannelState === "PENDING_SUBSCRIPTION") {
+							this.subscriptions.delete(channel);
+						}
+					}
+					this.emitter.emit("error", data);
+					reject(new Error(`Subscription ${id} failed`));
+				} else {
+					pendingChannels.forEach((channel) => this.subscriptions.set(channel, "SUBSCRIBED"));
+					resolve();
+				}
+			};
+			this.addListener("connectionMessage", handler);
+		});
+	}
+
+	public async unsubscribe(...channels: string[]) {
+		await this.connect();
+		// @TODO implement
+	}
+
+	public async reconnect() {
+		this.socket = this.createSocket();
+		await this.connect();
+		const toRestore: string[] = [];
+		for (const [channel, state] of this.subscriptions) {
+			if (state !== "PENDING_UNSUBSCRIPTION") toRestore.push(channel);
+		}
+		if (toRestore.length) {
+			await this.subscribe(...toRestore);
+		}
+	}
+
+	public async connect() {
+		if (this.socket.readyState === WebSocket.OPEN) {
+			return;
+		}
+		if (this.socket.readyState === WebSocket.CONNECTING) {
+			return new Promise<void>((resolve, reject) => {
+				this.socket.addEventListener("open", () => resolve(), { once: true });
+				this.socket.addEventListener("close", () => reject(), { once: true });
+			});
+		}
+
+		return this.reconnect();
+	}
+}
