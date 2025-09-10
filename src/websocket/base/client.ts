@@ -98,7 +98,47 @@ export class BinanceWebsocketClient<MarketEvent extends object> {
 
 	public async unsubscribe(...channels: string[]) {
 		await this.connect();
-		// @TODO implement
+		const id = this.subscriptionId;
+		const pendingChannels: string[] = [];
+		for (const channel of channels) {
+			const existingChannelState = this.subscriptions.get(channel);
+			if (existingChannelState !== "PENDING_UNSUBSCRIPTION") {
+				// @FIXME better wait for PENDING_SUBSCRIPTION to change
+				pendingChannels.push(channel);
+				this.subscriptions.set(channel, "PENDING_UNSUBSCRIPTION");
+			}
+		}
+		const data = {
+			method: "UNSUBSCRIBE",
+			params: pendingChannels,
+			id,
+		};
+		this.subscriptionId += 1;
+
+		this.sendMessage(data);
+		return new Promise<void>((resolve, reject) => {
+			const controller = new AbortController();
+			const handler: WebsocketClientEventMap<MarketEvent>["connectionMessage"] = (data) => {
+				if (data.id !== id) {
+					return;
+				}
+				controller.abort();
+				if ("error" in data) {
+					for (const channel of pendingChannels) {
+						const existingChannelState = this.subscriptions.get(channel);
+						if (existingChannelState === "PENDING_UNSUBSCRIPTION") {
+							this.subscriptions.set(channel, "SUBSCRIBED"); // @FIXME Might erase PENDING_SUBSCRIPTION channels
+						}
+					}
+					this.emitter.emit("error", data);
+					reject(new Error(`Unsubscription ${id} failed`));
+				} else {
+					pendingChannels.forEach((channel) => this.subscriptions.delete(channel));
+					resolve();
+				}
+			};
+			this.emitter.addEventListener("connectionMessage", handler, { signal: controller.signal });
+		});
 	}
 
 	public async reconnect() {
