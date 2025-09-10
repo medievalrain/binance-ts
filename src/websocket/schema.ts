@@ -8,10 +8,10 @@ export const ConnectionSuccessEventSchema = z.object({
 export const FuturesConnectionErrorEventSchema = z.object({
 	id: z.number(),
 	status: z.number(),
-	error: {
+	error: z.object({
 		code: z.number(),
 		msg: z.string(),
-	},
+	}),
 });
 
 export const FuturesConnectionEventSchema = z.union([ConnectionSuccessEventSchema, FuturesConnectionErrorEventSchema]);
