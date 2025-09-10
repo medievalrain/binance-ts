@@ -7,3 +7,5 @@ export {
 	ValidationError,
 	WeightError,
 } from "./shared/api-error";
+
+export * from "./websocket";
