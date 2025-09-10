@@ -20,12 +20,6 @@ export class BinanceWebsocketClient {
 
 	private subscriptions = new Map<string, SubscriptionState>();
 
-	public on = this.emitter.on.bind(this.emitter);
-	public once = this.emitter.once.bind(this.emitter);
-	public off = this.emitter.off.bind(this.emitter);
-	public addListener = this.emitter.addListener.bind(this.emitter);
-	public removeListener = this.emitter.removeListener.bind(this.emitter);
-
 	constructor(baseUrl: string) {
 		this.baseUrl = baseUrl;
 		this.socket = this.createSocket();
@@ -137,5 +131,12 @@ export class BinanceWebsocketClient {
 		}
 
 		return this.reconnect();
+	}
+
+	public addListener<E extends keyof WebsocketClientEventMap>(event: E, callback: WebsocketClientEventMap[E]) {
+		this.emitter.addListener(event, callback);
+	}
+	public removeListener<E extends keyof WebsocketClientEventMap>(event: E, callback: WebsocketClientEventMap[E]) {
+		this.emitter.addListener(event, callback);
 	}
 }
