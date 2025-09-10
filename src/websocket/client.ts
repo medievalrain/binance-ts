@@ -1,7 +1,6 @@
-import { FuturesWebsocketEventSchema } from "./schema";
 import { Emitter } from "./typed-event-emitter";
 import type { FuturesConnectionErrorEvent, FuturesConnectionEvent, FuturesMarketEvent } from "./types";
-import { ValidationError } from "@/shared/api-error";
+
 import { WebSocket, MessageEvent } from "undici";
 
 type WebsocketClientEventMap = {
@@ -44,17 +43,12 @@ export class BinanceWebsocketClient {
 			this.emitter.emit("error", new Error("Message event is not a string", { cause: e.data }));
 			return;
 		}
-		const data = JSON.parse(e.data);
-		const parsingResult = FuturesWebsocketEventSchema.safeParse(data);
-		if (parsingResult.error) {
-			this.emitter.emit("error", new ValidationError({ error: parsingResult.error, endpoint: "websocket", input: data }));
-			return;
-		}
-		const parsed = parsingResult.data;
-		if ("e" in parsed) {
-			this.emitter.emit("marketMessage", parsed);
+		const data = JSON.parse(e.data) as FuturesConnectionEvent | FuturesMarketEvent;
+
+		if ("id" in data) {
+			this.emitter.emit("connectionMessage", data);
 		} else {
-			this.emitter.emit("connectionMessage", parsed);
+			this.emitter.emit("marketMessage", data);
 		}
 	}
 

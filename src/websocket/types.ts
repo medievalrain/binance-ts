@@ -1,7 +1,38 @@
-import type { z } from "zod";
-import type { FuturesMarketEventSchema, FuturesConnectionEventSchema, FuturesConnectionErrorEventSchema } from "./schema";
+export type FuturesBookTickerEvent = {
+	u: number;
+	s: string;
+	b: string;
+	B: string;
+	a: string;
+	A: string;
+};
 
-export type FuturesMarketEvent = z.infer<typeof FuturesMarketEventSchema>;
+export type FuturesBookDepthEvent = {
+	E: number;
+	T: number;
+	s: string;
+	U: number;
+	u: number;
+	pu: number;
+	b: [string, string][];
+	a: [string, string][];
+};
 
-export type FuturesConnectionEvent = z.infer<typeof FuturesConnectionEventSchema>;
-export type FuturesConnectionErrorEvent = z.infer<typeof FuturesConnectionErrorEventSchema>;
+export type FuturesMarketEvent = FuturesBookDepthEvent | FuturesBookTickerEvent;
+
+export type FuturesConnectionSuccessEvent = {
+	result: null;
+	id: number;
+};
+
+export type FuturesConnectionErrorEvent = {
+	result: null;
+	id: number;
+	status: number;
+	error: {
+		code: number;
+		msg: string;
+	};
+};
+
+export type FuturesConnectionEvent = FuturesConnectionSuccessEvent | FuturesConnectionErrorEvent;
