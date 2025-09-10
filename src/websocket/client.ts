@@ -1,6 +1,5 @@
-import { EventEmitter } from "node:events";
 import { FuturesWebsocketEventSchema } from "./schema";
-import type { TypedEventEmitter } from "./typed-event-emitter";
+import { Emitter } from "./typed-event-emitter";
 import type { FuturesConnectionErrorEvent, FuturesConnectionEvent, FuturesMarketEvent } from "./types";
 import { ValidationError } from "@/shared/api-error";
 import { WebSocket, MessageEvent } from "undici";
@@ -15,7 +14,7 @@ type SubscriptionState = "SUBSCRIBED" | "PENDING_SUBSCRIPTION" | "PENDING_UNSUBS
 export class BinanceWebsocketClient {
 	private socket: WebSocket;
 	private baseUrl: string;
-	private emitter = new EventEmitter() as TypedEventEmitter<WebsocketClientEventMap>;
+	private emitter = new Emitter<WebsocketClientEventMap>();
 	private subscriptionId: number = 1;
 
 	private subscriptions = new Map<string, SubscriptionState>();
@@ -46,16 +45,16 @@ export class BinanceWebsocketClient {
 			return;
 		}
 		const data = JSON.parse(e.data);
-		const parsed = FuturesWebsocketEventSchema.safeParse(data);
-		if (parsed.error) {
-			this.emitter.emit("error", new ValidationError({ error: parsed.error, endpoint: "websocket", input: data }));
+		const parsingResult = FuturesWebsocketEventSchema.safeParse(data);
+		if (parsingResult.error) {
+			this.emitter.emit("error", new ValidationError({ error: parsingResult.error, endpoint: "websocket", input: data }));
 			return;
 		}
-
-		if ("e" in parsed.data) {
-			this.emitter.emit("marketMessage", parsed.data);
+		const parsed = parsingResult.data;
+		if ("e" in parsed) {
+			this.emitter.emit("marketMessage", parsed);
 		} else {
-			this.emitter.emit("connectionMessage", parsed.data);
+			this.emitter.emit("connectionMessage", parsed);
 		}
 	}
 
@@ -79,11 +78,12 @@ export class BinanceWebsocketClient {
 
 		this.sendMessage(data);
 		return new Promise<void>((resolve, reject) => {
+			const controller = new AbortController();
 			const handler: WebsocketClientEventMap["connectionMessage"] = (data) => {
 				if (data.id !== id) {
 					return;
 				}
-				this.emitter.removeListener("connectionMessage", handler);
+				controller.abort();
 				if ("error" in data) {
 					for (const channel of pendingChannels) {
 						const existingChannelState = this.subscriptions.get(channel);
@@ -98,7 +98,7 @@ export class BinanceWebsocketClient {
 					resolve();
 				}
 			};
-			this.addListener("connectionMessage", handler);
+			this.emitter.addEventListener("connectionMessage", handler, { signal: controller.signal });
 		});
 	}
 
@@ -133,10 +133,11 @@ export class BinanceWebsocketClient {
 		return this.reconnect();
 	}
 
-	public addListener<E extends keyof WebsocketClientEventMap>(event: E, callback: WebsocketClientEventMap[E]) {
-		this.emitter.addListener(event, callback);
-	}
-	public removeListener<E extends keyof WebsocketClientEventMap>(event: E, callback: WebsocketClientEventMap[E]) {
-		this.emitter.addListener(event, callback);
+	public addEventListener<E extends keyof WebsocketClientEventMap>(
+		event: E,
+		callback: WebsocketClientEventMap[E],
+		options?: AddEventListenerOptions
+	) {
+		this.emitter.addEventListener(event, callback, options);
 	}
 }
