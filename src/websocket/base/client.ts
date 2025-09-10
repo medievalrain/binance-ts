@@ -1,19 +1,19 @@
-import { Emitter } from "./typed-event-emitter";
-import type { FuturesConnectionErrorEvent, FuturesConnectionEvent, FuturesMarketEvent } from "./types";
+import { Emitter } from "../typed-event-emitter";
+import type { ConnectionErrorEvent, ConnectionEvent } from "./types";
 
 import { WebSocket, MessageEvent } from "undici";
 
-type WebsocketClientEventMap = {
-	marketMessage: (data: FuturesMarketEvent) => void;
-	connectionMessage: (data: FuturesConnectionEvent) => void;
-	error: (error: Error | FuturesConnectionErrorEvent) => void;
+type WebsocketClientEventMap<MarketEvent extends object> = {
+	marketMessage: (data: MarketEvent) => void;
+	connectionMessage: (data: ConnectionEvent) => void;
+	error: (error: Error | ConnectionErrorEvent) => void;
 };
 type SubscriptionState = "SUBSCRIBED" | "PENDING_SUBSCRIPTION" | "PENDING_UNSUBSCRIPTION";
 
-export class BinanceWebsocketClient {
+export class BinanceWebsocketClient<MarketEvent extends object> {
 	private socket: WebSocket;
 	private baseUrl: string;
-	private emitter = new Emitter<WebsocketClientEventMap>();
+	private emitter = new Emitter<WebsocketClientEventMap<MarketEvent>>();
 	private subscriptionId: number = 1;
 
 	private subscriptions = new Map<string, SubscriptionState>();
@@ -43,7 +43,7 @@ export class BinanceWebsocketClient {
 			this.emitter.emit("error", new Error("Message event is not a string", { cause: e.data }));
 			return;
 		}
-		const data = JSON.parse(e.data) as FuturesConnectionEvent | FuturesMarketEvent;
+		const data = JSON.parse(e.data) as ConnectionEvent | MarketEvent;
 
 		if ("id" in data) {
 			this.emitter.emit("connectionMessage", data);
@@ -73,7 +73,7 @@ export class BinanceWebsocketClient {
 		this.sendMessage(data);
 		return new Promise<void>((resolve, reject) => {
 			const controller = new AbortController();
-			const handler: WebsocketClientEventMap["connectionMessage"] = (data) => {
+			const handler: WebsocketClientEventMap<MarketEvent>["connectionMessage"] = (data) => {
 				if (data.id !== id) {
 					return;
 				}
@@ -127,9 +127,9 @@ export class BinanceWebsocketClient {
 		return this.reconnect();
 	}
 
-	public addEventListener<E extends keyof WebsocketClientEventMap>(
+	public addEventListener<E extends keyof WebsocketClientEventMap<MarketEvent>>(
 		event: E,
-		callback: WebsocketClientEventMap[E],
+		callback: WebsocketClientEventMap<MarketEvent>[E],
 		options?: AddEventListenerOptions
 	) {
 		this.emitter.addEventListener(event, callback, options);

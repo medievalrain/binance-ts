@@ -19,20 +19,3 @@ export type FuturesBookDepthEvent = {
 };
 
 export type FuturesMarketEvent = FuturesBookDepthEvent | FuturesBookTickerEvent;
-
-export type FuturesConnectionSuccessEvent = {
-	result: null;
-	id: number;
-};
-
-export type FuturesConnectionErrorEvent = {
-	result: null;
-	id: number;
-	status: number;
-	error: {
-		code: number;
-		msg: string;
-	};
-};
-
-export type FuturesConnectionEvent = FuturesConnectionSuccessEvent | FuturesConnectionErrorEvent;
