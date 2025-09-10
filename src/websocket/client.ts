@@ -20,9 +20,9 @@ export class BinanceWebsocketClient {
 	private subscriptions = new Map<string, SubscriptionState>();
 
 	constructor(baseUrl: string) {
+		this.parseEvent = this.parseEvent.bind(this);
 		this.baseUrl = baseUrl;
 		this.socket = this.createSocket();
-		this.parseEvent = this.parseEvent.bind(this);
 	}
 
 	private createSocket() {
