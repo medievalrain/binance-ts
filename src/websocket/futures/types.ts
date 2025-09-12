@@ -18,4 +18,7 @@ export type FuturesBookDepthEvent = {
 	a: [string, string][];
 };
 
-export type FuturesMarketEvent = FuturesBookDepthEvent | FuturesBookTickerEvent;
+export type FuturesChannels = {
+	bookTicker: FuturesBookTickerEvent;
+	depth: FuturesBookDepthEvent;
+};
