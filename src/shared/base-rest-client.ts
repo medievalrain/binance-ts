@@ -24,6 +24,10 @@ export class BaseRestClient {
 		this.credentials = credentials;
 		this.httpCleint = new Client(baseUrl, {
 			allowH2: true,
+			connect: {
+				maxVersion: "TLSv1.2",
+				...httpOptions?.connect,
+			},
 			...httpOptions,
 		});
 	}
