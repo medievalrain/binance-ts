@@ -8,17 +8,14 @@ import type {
 	WebsocketClient,
 	WebsocketClientEventMap,
 } from "./types";
-import { Emitter } from "./typed-event-emitter";
+import { createEmitter } from "./typed-event-emitter";
 
 type Section<MarketEvent extends object> = {
 	socket: WebSocket;
 	subscriptions: Map<string, SubscriptionState>;
 	connectionId: number;
-	addEventListener: <E extends keyof WebsocketClientEventMap<MarketEvent>>(
-		event: E,
-		callback: WebsocketClientEventMap<MarketEvent>[E],
-		options?: AddEventListenerOptions
-	) => void;
+	addEventListener: (callback: (data: MarketEvent) => void, options?: AddEventListenerOptions) => void;
+	removeEventListener: (callback: (data: MarketEvent) => void) => void;
 	subscribe: (symbols: string[]) => Promise<void>;
 	unsubscribe: (symbols: string[]) => Promise<void>;
 };
@@ -28,7 +25,7 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 	let connectionController = new AbortController();
 
 	const subscriptions = new Map<string, SubscriptionState>();
-	const emitter = new Emitter<WebsocketClientEventMap<MarketEvent>>();
+	const emitter = createEmitter<WebsocketClientEventMap<MarketEvent>>();
 	let connectionId = 1;
 
 	const parseMessageEvent = (e: MessageEvent) => {
@@ -185,11 +182,20 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 		}
 	};
 
+	const addMarketEventListener = (callback: (data: MarketEvent) => void, options?: AddEventListenerOptions) => {
+		emitter.addEventListener("marketMessage", callback, options);
+	};
+
+	const removeMarketEventListener = (callback: (data: MarketEvent) => void) => {
+		emitter.removeEventListener("marketMessage", callback);
+	};
+
 	return {
 		socket,
 		subscriptions,
 		connectionId,
-		addEventListener: emitter.addEventListener.bind(emitter),
+		addEventListener: addMarketEventListener,
+		removeEventListener: removeMarketEventListener,
 		subscribe,
 		unsubscribe,
 	};
@@ -220,12 +226,8 @@ export const createWebsocketClient = <CM extends ChannelsMap>(baseUrl: string, s
 				unsubscribe: (symbols: string[], ...args: OptArgs<CM, typeof channel>) => {
 					return section.unsubscribe(symbols.map((s) => converter(s, ...args)));
 				},
-				addEventListener: (
-					callback: (data: CM[typeof channel]["messageSchema"]) => void,
-					options?: AddEventListenerOptions
-				) => {
-					section.addEventListener("marketMessage", callback, options);
-				},
+				addEventListener: section.addEventListener,
+				removeEventListener: section.removeEventListener,
 			});
 		},
 	};
