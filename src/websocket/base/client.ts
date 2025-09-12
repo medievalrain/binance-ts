@@ -136,7 +136,51 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 	};
 	const unsubscribe = async (symbols: string[]) => {
 		await connect();
-		// @TODO
+
+		const toUnsubscribe: string[] = [];
+		const delayed: string[] = [];
+		connectionId += 1;
+		const currentId = connectionId;
+		symbols.forEach((symbol) => {
+			const existing = subscriptions.get(symbol);
+			if (existing === "SUBSCRIBED") {
+				toUnsubscribe.push(symbol);
+				subscriptions.set(symbol, "PENDING_UNSUBSCRIPTION");
+				return;
+			}
+
+			delayed.push(symbol);
+		});
+		sendMessage({
+			method: "UNSUBSCRIBE",
+			params: toUnsubscribe,
+			id: currentId,
+		});
+
+		const waitForUnsub = new Promise<void>((resolve, reject) => {
+			const controller = new AbortController();
+			const handleSubscription = (data: ConnectionEvent) => {
+				if (data.id !== currentId) {
+					return;
+				}
+				controller.abort();
+				if ("error" in data) {
+					return reject();
+				} else {
+					toUnsubscribe.forEach((symbol) => subscriptions.delete(symbol));
+
+					return resolve();
+				}
+			};
+			emitter.addEventListener("connectionMessage", handleSubscription, { signal: controller.signal });
+			// @TODO add timeout
+		});
+
+		await waitForUnsub;
+
+		if (delayed.length) {
+			return unsubscribe(delayed);
+		}
 	};
 
 	return {
