@@ -158,9 +158,9 @@ export const createWebsocketClient = <CM extends ChannelsMap>(baseUrl: string) =
 		get(_target, channel: keyof CM & string) {
 			const section = getSection(channel);
 			return Object.freeze({
-				subscribe: (...symbols: string[]) => section.subscribe(symbols.map((symbol) => `${channel}@${symbol.toLowerCase()}`)),
+				subscribe: (...symbols: string[]) => section.subscribe(symbols.map((symbol) => `${symbol.toLowerCase()}@${channel}`)),
 				unsubscribe: (...symbols: string[]) =>
-					section.unsubscribe(symbols.map((symbol) => `${channel}@${symbol.toLowerCase()}`)),
+					section.unsubscribe(symbols.map((symbol) => `${symbol.toLowerCase()}@${channel}`)),
 				addEventListener: (callback: (data: CM[keyof CM]) => void, options?: AddEventListenerOptions) => {
 					section.addEventListener("marketMessage", callback, options);
 				},
