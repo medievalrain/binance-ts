@@ -6,13 +6,8 @@ let client: SpotRestClient;
 beforeAll(async () => {
 	const apiKey = process.env.API_KEY;
 	const apiSecret = process.env.API_SECRET;
-	if (!apiKey || !apiSecret) {
-		throw new Error("No credentials provided");
-	}
 
-	client = new SpotRestClient({
-		credentials: { key: apiKey, secret: apiSecret },
-	});
+	client = new SpotRestClient({ apiKey, apiSecret });
 	await client.testConnectivity();
 });
 
