@@ -131,7 +131,14 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 		// @TODO
 	};
 
-	return { socket, subscriptions, connectionId, addEventListener: emitter.addEventListener, subscribe, unsubscribe };
+	return {
+		socket,
+		subscriptions,
+		connectionId,
+		addEventListener: emitter.addEventListener.bind(emitter),
+		subscribe,
+		unsubscribe,
+	};
 };
 
 export const createWebsocketClient = <CM extends ChannelsMap>(baseUrl: string) => {
