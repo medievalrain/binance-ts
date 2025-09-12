@@ -82,9 +82,6 @@ export class MalformedParamError extends ResponseError {
 
 	private parseParam(message: string) {
 		const match = message.match(/'([^']+)'/);
-		if (match) {
-			console.log(match[1]);
-		}
 
 		if (!match) {
 			throw new ErrorMessageParsingError("Can't parse param data");
