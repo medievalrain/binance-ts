@@ -7,11 +7,8 @@ import { MalformedParamError } from "@/shared/api-error";
 let client: FuturesRestClient;
 
 beforeAll(async () => {
-	const apiKey = process.env.API_KEY;
-	const apiSecret = process.env.API_SECRET;
-	if (!apiKey || !apiSecret) {
-		throw new Error("No credentials provided");
-	}
+	const apiKey = process.env.API_KEY!;
+	const apiSecret = process.env.API_SECRET!;
 
 	client = new FuturesRestClient({
 		credentials: { key: apiKey, secret: apiSecret },
