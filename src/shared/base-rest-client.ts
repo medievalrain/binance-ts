@@ -1,7 +1,6 @@
 import { Client, Dispatcher } from "undici";
 
 import { ApiError, MalformedParamError, ValidationError, WeightError } from "./api-error";
-import type { ApiCredentials } from "@/types";
 import * as z4 from "zod/v4/core";
 import { ErrorResponseSchema } from "./schema";
 import { createHmac } from "node:crypto";
@@ -9,19 +8,23 @@ import { createHmac } from "node:crypto";
 export type RawSearchParams = Record<string, string | undefined | null | string[] | number | boolean>;
 
 export class BaseRestClient {
-	private credentials?: ApiCredentials;
 	private httpCleint: Client;
+	private apiKey?: string;
+	private apiSecret?: string;
 
 	constructor({
 		baseUrl,
-		credentials,
+		apiKey,
+		apiSecret,
 		httpOptions,
 	}: {
 		baseUrl: string;
-		credentials?: ApiCredentials;
+		apiKey?: string;
+		apiSecret?: string;
 		httpOptions?: Client.Options;
 	}) {
-		this.credentials = credentials;
+		this.apiKey = apiKey;
+		this.apiSecret = apiSecret;
 		this.httpCleint = new Client(baseUrl, {
 			allowH2: true,
 			connect: {
@@ -104,7 +107,7 @@ export class BaseRestClient {
 			path: endpoint,
 			query: searchParams,
 			headers: {
-				"X-MBX-APIKEY": this.credentials?.secret,
+				"X-MBX-APIKEY": this.apiKey,
 			},
 		});
 		return this.parseResponse(schema, response, endpoint);
@@ -121,7 +124,7 @@ export class BaseRestClient {
 		method: "GET" | "POST" | "DELETE";
 		schema: T;
 	}) {
-		if (!this.credentials) {
+		if (!this.apiKey || !this.apiSecret) {
 			throw new ApiError({
 				endpoint,
 				metadata: { cause: "Empty credentials" },
@@ -129,11 +132,10 @@ export class BaseRestClient {
 		}
 
 		const searchParams = this.toSearchParams(params);
-		if (this.credentials) {
-			searchParams["timestamp"] = new Date().getTime().toString();
-			const signature = this.sign(new URLSearchParams(searchParams).toString(), this.credentials.secret);
-			searchParams["signature"] = signature;
-		}
+
+		searchParams["timestamp"] = new Date().getTime().toString();
+		const signature = this.sign(new URLSearchParams(searchParams).toString(), this.apiSecret);
+		searchParams["signature"] = signature;
 
 		const response = await this.httpCleint.request({
 			method,
@@ -141,7 +143,7 @@ export class BaseRestClient {
 			query: method !== "POST" ? searchParams : undefined,
 			body: method === "POST" ? new URLSearchParams(searchParams).toString() : undefined,
 			headers: {
-				"X-MBX-APIKEY": this.credentials?.key,
+				"X-MBX-APIKEY": this.apiKey,
 			},
 		});
 

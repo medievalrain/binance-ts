@@ -7,12 +7,7 @@ import { MalformedParamError } from "@/shared/api-error";
 let client: FuturesRestClient;
 
 beforeAll(async () => {
-	const apiKey = process.env.API_KEY!;
-	const apiSecret = process.env.API_SECRET!;
-
-	client = new FuturesRestClient({
-		credentials: { key: apiKey, secret: apiSecret },
-	});
+	client = new FuturesRestClient({ apiKey: process.env.API_KEY, apiSecret: process.env.API_SECRET });
 	await client.testConnectivity();
 });
 

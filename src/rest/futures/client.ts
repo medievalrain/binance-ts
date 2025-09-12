@@ -59,21 +59,23 @@ import type {
 	FuturesTestConnectivity,
 	FuturesCheckServerTime,
 } from "./types";
-import type { ApiCredentials } from "@/types";
+
 import z from "zod";
 import { Client } from "undici";
 
 export class FuturesRestClient extends BaseRestClient {
 	constructor({
 		baseUrl = "https://fapi.binance.com",
-		credentials,
+		apiKey,
+		apiSecret,
 		httpOptions,
 	}: {
-		credentials?: ApiCredentials;
+		apiKey?: string;
+		apiSecret?: string;
 		baseUrl?: string;
 		httpOptions?: Client.Options;
 	}) {
-		super({ baseUrl, credentials, httpOptions });
+		super({ baseUrl, apiKey, apiSecret, httpOptions });
 	}
 
 	public async testConnectivity(): Promise<FuturesTestConnectivity> {
