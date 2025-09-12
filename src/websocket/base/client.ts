@@ -8,7 +8,7 @@ import type {
 	WebsocketClient,
 	WebsocketClientEventMap,
 } from "./types";
-import { Emitter } from "../typed-event-emitter";
+import { Emitter } from "./typed-event-emitter";
 
 type Section<MarketEvent extends object> = {
 	socket: WebSocket;
