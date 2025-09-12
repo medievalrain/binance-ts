@@ -1,19 +1,20 @@
 import { BaseRestClient } from "@/shared/base-rest-client";
-import type { ApiCredentials } from "@/types";
 import type { Client } from "undici";
 import { SpotCheckServerTimeSchema, SpotTestConnectivitySchema } from "./schema";
 
 export class SpotRestClient extends BaseRestClient {
 	constructor({
 		baseUrl = "https://api.binance.com",
-		credentials,
+		apiKey,
+		apiSecret,
 		httpOptions,
 	}: {
-		credentials?: ApiCredentials;
+		apiKey?: string;
+		apiSecret?: string;
 		baseUrl?: string;
 		httpOptions?: Client.Options;
 	}) {
-		super({ baseUrl, credentials, httpOptions });
+		super({ baseUrl, apiKey, apiSecret, httpOptions });
 	}
 
 	public async testConnectivity() {
