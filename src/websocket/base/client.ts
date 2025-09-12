@@ -111,11 +111,13 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 
 		const waitForSub = new Promise<void>((resolve, reject) => {
 			const controller = new AbortController();
+			const timeout = setTimeout(() => reject(), 10000);
 			const handleSubscription = (data: ConnectionEvent) => {
 				if (data.id !== currentId) {
 					return;
 				}
 				controller.abort();
+				clearTimeout(timeout);
 				if ("error" in data) {
 					return reject();
 				} else {
@@ -125,7 +127,6 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 				}
 			};
 			emitter.addEventListener("connectionMessage", handleSubscription, { signal: controller.signal });
-			// @TODO add timeout
 		});
 
 		await waitForSub;
@@ -159,11 +160,13 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 
 		const waitForUnsub = new Promise<void>((resolve, reject) => {
 			const controller = new AbortController();
+			const timeout = setTimeout(() => reject(), 10000);
 			const handleSubscription = (data: ConnectionEvent) => {
 				if (data.id !== currentId) {
 					return;
 				}
 				controller.abort();
+				clearTimeout(timeout);
 				if ("error" in data) {
 					return reject();
 				} else {
@@ -173,7 +176,6 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 				}
 			};
 			emitter.addEventListener("connectionMessage", handleSubscription, { signal: controller.signal });
-			// @TODO add timeout
 		});
 
 		await waitForUnsub;
