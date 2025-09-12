@@ -1,5 +1,13 @@
 import { WebSocket, MessageEvent } from "undici";
-import type { ChannelsMap, ConnectionEvent, SubscriptionState, WebsocketClient, WebsocketClientEventMap } from "./types";
+import type {
+	ChannelsMap,
+	ConnectionEvent,
+	OptArgs,
+	SubscriptionState,
+	SymbolConverter,
+	WebsocketClient,
+	WebsocketClientEventMap,
+} from "./types";
 import { Emitter } from "../typed-event-emitter";
 
 type Section<MarketEvent extends object> = {
@@ -141,8 +149,8 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 	};
 };
 
-export const createWebsocketClient = <CM extends ChannelsMap>(baseUrl: string) => {
-	const sections = new Map<keyof CM, Section<CM[keyof CM]>>();
+export const createWebsocketClient = <CM extends ChannelsMap>(baseUrl: string, symbolConverter: SymbolConverter<CM>) => {
+	const sections = new Map<keyof CM, Section<CM[keyof CM]["messageSchema"]>>();
 
 	const getSection = (channel: keyof CM) => {
 		const existingSection = sections.get(channel);
@@ -154,14 +162,22 @@ export const createWebsocketClient = <CM extends ChannelsMap>(baseUrl: string) =
 		return section;
 	};
 
-	const handler: ProxyHandler<object> = {
+	const handler: ProxyHandler<{}> = {
 		get(_target, channel: keyof CM & string) {
 			const section = getSection(channel);
+			const converter = symbolConverter[channel];
+
 			return Object.freeze({
-				subscribe: (...symbols: string[]) => section.subscribe(symbols.map((symbol) => `${symbol.toLowerCase()}@${channel}`)),
-				unsubscribe: (...symbols: string[]) =>
-					section.unsubscribe(symbols.map((symbol) => `${symbol.toLowerCase()}@${channel}`)),
-				addEventListener: (callback: (data: CM[keyof CM]) => void, options?: AddEventListenerOptions) => {
+				subscribe: (symbols: string[], ...args: OptArgs<CM, typeof channel>) => {
+					return section.subscribe(symbols.map((s) => converter(s, ...args)));
+				},
+				unsubscribe: (symbols: string[], ...args: OptArgs<CM, typeof channel>) => {
+					return section.unsubscribe(symbols.map((s) => converter(s, ...args)));
+				},
+				addEventListener: (
+					callback: (data: CM[typeof channel]["messageSchema"]) => void,
+					options?: AddEventListenerOptions
+				) => {
 					section.addEventListener("marketMessage", callback, options);
 				},
 			});

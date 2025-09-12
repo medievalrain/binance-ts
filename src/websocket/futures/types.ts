@@ -19,6 +19,9 @@ export type FuturesBookDepthEvent = {
 };
 
 export type FuturesChannels = {
-	bookTicker: FuturesBookTickerEvent;
-	depth: FuturesBookDepthEvent;
+	bookTicker: { messageSchema: FuturesBookTickerEvent; subscriptionOptions: never };
+	partialBookDepth: {
+		messageSchema: FuturesBookDepthEvent;
+		subscriptionOptions: { levels: number; updateSpeedMs?: number };
+	};
 };
