@@ -3,22 +3,13 @@ import type {
 	ChannelsMap,
 	ConnectionEvent,
 	OptArgs,
+	Section,
 	SubscriptionState,
 	SymbolConverter,
 	WebsocketClient,
 	WebsocketClientEventMap,
 } from "./types";
 import { createEmitter } from "./typed-event-emitter";
-
-type Section<MarketEvent extends object> = {
-	socket: WebSocket;
-	subscriptions: Map<string, SubscriptionState>;
-	connectionId: number;
-	addEventListener: (callback: (data: MarketEvent) => void, options?: AddEventListenerOptions) => void;
-	removeEventListener: (callback: (data: MarketEvent) => void) => void;
-	subscribe: (symbols: string[]) => Promise<void>;
-	unsubscribe: (symbols: string[]) => Promise<void>;
-};
 
 const makeSection = <MarketEvent extends object>(baseUrl: string): Section<MarketEvent> => {
 	let socket = new WebSocket(baseUrl);
@@ -186,16 +177,11 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 		emitter.addEventListener("marketMessage", callback, options);
 	};
 
-	const removeMarketEventListener = (callback: (data: MarketEvent) => void) => {
-		emitter.removeEventListener("marketMessage", callback);
-	};
-
 	return {
 		socket,
 		subscriptions,
 		connectionId,
 		addEventListener: addMarketEventListener,
-		removeEventListener: removeMarketEventListener,
 		subscribe,
 		unsubscribe,
 	};
@@ -227,7 +213,6 @@ export const createWebsocketClient = <CM extends ChannelsMap>(baseUrl: string, s
 					return section.unsubscribe(symbols.map((s) => converter(s, ...args)));
 				},
 				addEventListener: section.addEventListener,
-				removeEventListener: section.removeEventListener,
 			});
 		},
 	};

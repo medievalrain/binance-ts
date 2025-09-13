@@ -1,3 +1,5 @@
+import type { WebSocket } from "undici";
+
 export type ConnectionSuccessEvent = {
 	result: null;
 	id: number;
@@ -39,4 +41,13 @@ export type WebsocketClientEventMap<MarketEvent extends object> = {
 
 export type SymbolConverter<CM extends ChannelsMap> = {
 	[K in keyof CM]: (symbol: string, ...args: OptArgs<CM, K>) => string;
+};
+
+export type Section<MarketEvent extends object> = {
+	socket: WebSocket;
+	subscriptions: Map<string, SubscriptionState>;
+	connectionId: number;
+	addEventListener: (callback: (data: MarketEvent) => void, options?: AddEventListenerOptions) => void;
+	subscribe: (symbols: string[]) => Promise<void>;
+	unsubscribe: (symbols: string[]) => Promise<void>;
 };
