@@ -36,6 +36,7 @@
 	"dependencies": {
 		"undici": "7.16.0"
 	},
+	"repository": "github:medievalrain/binance-ts",
 	"engines": {
 		"node": ">=22.19.0"
 	},
