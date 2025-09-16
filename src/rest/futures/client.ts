@@ -58,6 +58,7 @@ import type {
 	FuturesSelfTradePrevention,
 	FuturesTestConnectivity,
 	FuturesCheckServerTime,
+	FuturesIncomeType,
 } from "./types";
 
 import z from "zod";
@@ -479,7 +480,7 @@ export class FuturesRestClient extends BaseRestClient {
 
 	public async incomeHistory(params?: {
 		symbol?: string;
-		incomeType?: z.infer<typeof FuturesIncomeTypeSchema>;
+		incomeType?: FuturesIncomeType;
 		startTime?: number;
 		endTime?: number;
 		page?: number;
