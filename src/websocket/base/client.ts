@@ -9,7 +9,7 @@ import type {
 	WebsocketClient,
 	WebsocketClientEventMap,
 } from "./types";
-import { createEmitter } from "./typed-event-emitter";
+import { createEmitter } from "@medievalrain/emitter";
 
 const makeSection = <MarketEvent extends object>(baseUrl: string): Section<MarketEvent> => {
 	let socket = new WebSocket(baseUrl);
@@ -114,7 +114,7 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 					return resolve();
 				}
 			};
-			emitter.addEventListener("connectionMessage", handleSubscription, { signal: controller.signal });
+			emitter.on("connectionMessage", handleSubscription, { signal: controller.signal });
 		});
 
 		await waitForSub;
@@ -163,7 +163,7 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 					return resolve();
 				}
 			};
-			emitter.addEventListener("connectionMessage", handleSubscription, { signal: controller.signal });
+			emitter.on("connectionMessage", handleSubscription, { signal: controller.signal });
 		});
 
 		await waitForUnsub;
@@ -173,15 +173,19 @@ const makeSection = <MarketEvent extends object>(baseUrl: string): Section<Marke
 		}
 	};
 
-	const addMarketEventListener = (callback: (data: MarketEvent) => void, options?: AddEventListenerOptions) => {
-		emitter.addEventListener("marketMessage", callback, options);
+	const onMarketEvent = (callback: (data: MarketEvent) => void, options?: AddEventListenerOptions) => {
+		emitter.on("marketMessage", callback, options);
+	};
+	const offMarketEvent = (callback: (data: MarketEvent) => void, options?: AddEventListenerOptions) => {
+		emitter.on("marketMessage", callback, options);
 	};
 
 	return {
 		socket,
 		subscriptions,
 		connectionId,
-		addEventListener: addMarketEventListener,
+		on: onMarketEvent,
+		off: offMarketEvent,
 		subscribe,
 		unsubscribe,
 	};
@@ -212,7 +216,8 @@ export const createWebsocketClient = <CM extends ChannelsMap>(baseUrl: string, s
 				unsubscribe: (symbols: string[], ...args: OptArgs<CM, typeof channel>) => {
 					return section.unsubscribe(symbols.map((s) => converter(s, ...args)));
 				},
-				addEventListener: section.addEventListener,
+				on: section.on,
+				off: section.off,
 			});
 		},
 	};

@@ -1,3 +1,4 @@
+import type { CallbackOptions } from "@medievalrain/emitter";
 import type { WebSocket } from "undici";
 
 export type ConnectionSuccessEvent = {
@@ -29,7 +30,7 @@ export type WebsocketClient<CM extends ChannelsMap> = {
 	[K in keyof CM]: {
 		subscribe: (symbols: string[], ...args: OptArgs<CM, K>) => Promise<void>;
 		unsubscribe: (symbols: string[], ...args: OptArgs<CM, K>) => Promise<void>;
-		addEventListener: (cb: (data: CM[K]["messageSchema"]) => void, options?: AddEventListenerOptions) => void;
+		addEventListener: (cb: (data: CM[K]["messageSchema"]) => void, options?: CallbackOptions) => void;
 	};
 };
 
@@ -47,7 +48,8 @@ export type Section<MarketEvent extends object> = {
 	socket: WebSocket;
 	subscriptions: Map<string, SubscriptionState>;
 	connectionId: number;
-	addEventListener: (callback: (data: MarketEvent) => void, options?: AddEventListenerOptions) => void;
+	on: (callback: (data: MarketEvent) => void, options?: CallbackOptions) => void;
+	off: (callback: (data: MarketEvent) => void) => void;
 	subscribe: (symbols: string[]) => Promise<void>;
 	unsubscribe: (symbols: string[]) => Promise<void>;
 };
