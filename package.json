@@ -21,7 +21,7 @@
 		"test": "vitest"
 	},
 	"devDependencies": {
-		"@types/node": "24.4.0",
+		"@types/node": "24.5.0",
 		"date-fns": "4.1.0",
 		"dotenv": "17.2.2",
 		"oxlint": "1.15.0",
@@ -34,7 +34,7 @@
 		"zod": "^4"
 	},
 	"dependencies": {
-		"@medievalrain/emitter": "^0.1.0",
+		"@medievalrain/emitter": "0.1.0",
 		"undici": "7.16.0"
 	},
 	"repository": {
