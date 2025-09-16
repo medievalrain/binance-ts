@@ -34,7 +34,7 @@
 		"zod": "^4"
 	},
 	"dependencies": {
-		"@medievalrain/emitter": "0.1.0",
+		"@medievalrain/emitter": "0.2.1",
 		"undici": "7.16.0"
 	},
 	"repository": {
