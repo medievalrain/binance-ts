@@ -14,7 +14,6 @@ import {
 	FuturesAccountConfigSchema,
 	FuturesAccountInfoSchema,
 	FuturesIncomeHistorySchema,
-	FuturesIncomeTypeSchema,
 	FuturesIndexPriceConstituentsSchema,
 	FuturesInsuranceBalanceEntrySchema,
 	FuturesKlineDataSchema,
