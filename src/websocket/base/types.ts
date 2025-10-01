@@ -30,7 +30,8 @@ export type WebsocketClient<CM extends ChannelsMap> = {
 	[K in keyof CM]: {
 		subscribe: (symbols: string[], ...args: OptArgs<CM, K>) => Promise<void>;
 		unsubscribe: (symbols: string[], ...args: OptArgs<CM, K>) => Promise<void>;
-		addEventListener: (cb: (data: CM[K]["messageSchema"]) => void, options?: CallbackOptions) => void;
+		on: (cb: (data: CM[K]["messageSchema"]) => void, options?: CallbackOptions) => void;
+		off: (cb: (data: CM[K]["messageSchema"]) => void) => void;
 	};
 };
 
