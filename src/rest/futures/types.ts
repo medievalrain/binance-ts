@@ -111,23 +111,24 @@ export type FuturesOrderBook = {
 	lastUpdateId: number;
 	E: number;
 	T: number;
-	bids: [number, number][];
-	asks: [number, number][];
+	bids: [string, string][];
+	asks: [string, string][];
 };
 
 export type FuturesTrade = {
 	id: number;
-	price: number;
-	qty: number;
-	quoteQty: number;
+	price: string;
+	qty: string;
+	quoteQty: string;
 	time: number;
 	isBuyerMaker: boolean;
+	isRPITrade: boolean;
 };
 
 export type FuturesAggregateTrade = {
 	a: number;
-	p: number;
-	q: number;
+	p: string;
+	q: string;
 	f: number;
 	l: number;
 	T: number;
@@ -136,65 +137,68 @@ export type FuturesAggregateTrade = {
 
 export type FuturesKlineInterval = "1s" | "1m" | "3m" | "5m" | "30m" | "1h" | "2h" | "6h" | "8h" | "12h" | "3d" | "1M";
 
-export type FuturesKline = [number, number, number, number, number, number, number, number, number, number, number, number];
+export type FuturesKline = [number, string, string, string, string, string, number, string, number, string, string, string];
 
 export type FuturesMarkPrice = {
 	symbol: string;
-	markPrice: number;
-	indexPrice: number;
-	estimatedSettlePrice: number;
-	lastFundingRate: number;
-	interestRate: number;
+	markPrice: string;
+	indexPrice: string;
+	estimatedSettlePrice: string;
+	lastFundingRate: string;
+	interestRate: string;
 	nextFundingTime: number;
 	time: number;
 };
 
 export type FuturesFundingRate = {
 	symbol: string;
-	fundingRate: number;
+	fundingRate: string;
 	fundingTime: number;
-	markPrice: number;
+	markPrice: string;
 };
 
 export type FuturesFundingInfo = {
-	symbol: string;
-	adjustedFundingRateCap: number;
-	adjustedFundingRateFloor: number;
+	adjustedFundingRateCap: string;
+	adjustedFundingRateFloor: string;
+	disclaimer: boolean;
 	fundingIntervalHours: number;
+	symbol: string;
+	updateTime: number | null;
 };
 
 export type FuturesTicker24h = {
-	symbol: string;
-	priceChange: number;
-	priceChangePercent: number;
-	weightedAvgPrice: number;
-	lastPrice: number;
-	lastQty: number;
-	openPrice: number;
-	highPrice: number;
-	lowPrice: number;
-	volume: number;
-	quoteVolume: number;
-	openTime: number;
 	closeTime: number;
-	firstId: number;
-	lastId: number;
 	count: number;
+	firstId: number;
+	highPrice: string;
+	lastId: number;
+	lastPrice: string;
+	lastQty: string;
+	lowPrice: string;
+	openPrice: string;
+	openTime: number;
+	priceChange: string;
+	priceChangePercent: string;
+	quoteVolume: string;
+	symbol: string;
+	volume: string;
+	weightedAvgPrice: string;
 };
 
 export type FuturesSymbolPrice = {
 	symbol: string;
-	price: number;
+	price: string;
 	time: number;
 };
 
 export type FuturesBookTicker = {
 	symbol: string;
-	bidPrice: number;
-	bidQty: number;
-	askPrice: number;
-	askQty: number;
+	bidPrice: string;
+	bidQty: string;
+	askPrice: string;
+	askQty: string;
 	time: number;
+	lastUpdateId: number;
 };
 
 export type FuturesDeliveryPrice = {
@@ -203,42 +207,43 @@ export type FuturesDeliveryPrice = {
 };
 
 export type FuturesOpenInterest = {
-	openInterest: number;
+	openInterest: string;
 	symbol: string;
 	time: number;
 };
 
 export type FuturesOpenInterestStats = {
 	symbol: string;
-	sumOpenInterest: number;
-	sumOpenInterestValue: number;
+	CMCCirculatingSupply: string;
+	sumOpenInterest: string;
+	sumOpenInterestValue: string;
 	timestamp: number;
 };
 
 export type FuturesLongShortRatio = {
 	symbol: string;
-	longShortRatio: number;
-	longAccount: number;
-	shortAccount: number;
+	longShortRatio: string;
+	longAccount: string;
+	shortAccount: string;
 	timestamp: number;
 };
 
 export type FuturesOpenInterestPeriod = "5m" | "15m" | "30m" | "1h" | "2h" | "4h" | "6h" | "12h" | "1d";
 
 export type FuturesTakerBuySellRatio = {
-	buySellRatio: number;
-	buyVol: number;
-	sellVol: number;
+	buySellRatio: string;
+	buyVol: string;
+	sellVol: string;
 	timestamp: number;
 };
 
 export type FuturesBasis = {
-	indexPrice: number;
+	indexPrice: string;
 	contractType: FuturesContractType;
-	basisRate: number;
-	futuresPrice: number;
-	annualizedBasisRate?: string;
-	basis: number;
+	basisRate: string;
+	futuresPrice: string;
+	annualizedBasisRate: string;
+	basis: string;
 	pair: string;
 	timestamp: number;
 };
@@ -246,8 +251,8 @@ export type FuturesBasis = {
 export type FuturesCompositeIndexAsset = {
 	baseAsset: string;
 	quoteAsset: string;
-	weightInQuantity: number;
-	weightInPercentage: number;
+	weightInQuantity: string;
+	weightInPercentage: string;
 };
 
 export type FuturesCompositeIndex = {
@@ -258,24 +263,24 @@ export type FuturesCompositeIndex = {
 };
 
 export type FuturesAssetIndex = {
+	askBuffer: string;
+	askRate: string;
+	autoExchangeAskBuffer: string;
+	autoExchangeAskRate: string;
+	autoExchangeBidBuffer: string;
+	autoExchangeBidRate: string;
+	bidBuffer: string;
+	bidRate: string;
+	index: string;
 	symbol: string;
 	time: number;
-	index: number;
-	bidBuffer: number;
-	askBuffer: number;
-	bidRate: number;
-	askRate: number;
-	autoExchangeBidBuffer: number;
-	autoExchangeAskBuffer: number;
-	autoExchangeBidRate: number;
-	autoExchangeAskRate: number;
 };
 
 export type FuturesIndexPriceConstituentItem = {
 	exchange: string;
 	symbol: string;
-	price: number;
-	weight: number;
+	price: string;
+	weight: string;
 };
 
 export type FuturesIndexPriceConstituents = {
@@ -286,7 +291,7 @@ export type FuturesIndexPriceConstituents = {
 
 export type FuturesInsuranceBalanceAsset = {
 	asset: string;
-	marginBalance: number;
+	marginBalance: string;
 	updateTime: number;
 };
 
@@ -298,28 +303,28 @@ export type FuturesInsuranceBalance = {
 export type FuturesAccountBalance = {
 	accountAlias: string;
 	asset: string;
-	balance: number;
-	crossWalletBalance: number;
-	crossUnPnl: number;
-	availableBalance: number;
-	maxWithdrawAmount: number;
+	balance: string;
+	crossWalletBalance: string;
+	crossUnPnl: string;
+	availableBalance: string;
+	maxWithdrawAmount: string;
 	marginAvailable: boolean;
 	updateTime: number;
 };
 
 export type FuturesAccountAsset = {
 	asset: string;
-	walletBalance: number;
-	unrealizedProfit: number;
-	marginBalance: number;
-	maintMargin: number;
-	initialMargin: number;
-	positionInitialMargin: number;
-	openOrderInitialMargin: number;
-	crossWalletBalance: number;
-	crossUnPnl: number;
-	availableBalance: number;
-	maxWithdrawAmount: number;
+	walletBalance: string;
+	unrealizedProfit: string;
+	marginBalance: string;
+	maintMargin: string;
+	initialMargin: string;
+	positionInitialMargin: string;
+	openOrderInitialMargin: string;
+	crossWalletBalance: string;
+	crossUnPnl: string;
+	availableBalance: string;
+	maxWithdrawAmount: string;
 	updateTime: number;
 	marginAvailable?: boolean;
 };
@@ -327,28 +332,28 @@ export type FuturesAccountAsset = {
 export type FuturesAccountPosition = {
 	symbol: string;
 	positionSide: string;
-	positionAmt: number;
-	unrealizedProfit: number;
-	isolatedMargin: number;
-	notional: number;
-	isolatedWallet: number;
-	initialMargin: number;
-	maintMargin: number;
+	positionAmt: string;
+	unrealizedProfit: string;
+	isolatedMargin: string;
+	notional: string;
+	isolatedWallet: string;
+	initialMargin: string;
+	maintMargin: string;
 	updateTime: number;
 };
 
 export type FuturesAccountInfo = {
-	totalInitialMargin: number;
-	totalMaintMargin: number;
-	totalWalletBalance: number;
-	totalUnrealizedProfit: number;
-	totalMarginBalance: number;
-	totalPositionInitialMargin: number;
-	totalOpenOrderInitialMargin: number;
-	totalCrossWalletBalance: number;
-	totalCrossUnPnl: number;
-	availableBalance: number;
-	maxWithdrawAmount: number;
+	totalInitialMargin: string;
+	totalMaintMargin: string;
+	totalWalletBalance: string;
+	totalUnrealizedProfit: string;
+	totalMarginBalance: string;
+	totalPositionInitialMargin: string;
+	totalOpenOrderInitialMargin: string;
+	totalCrossWalletBalance: string;
+	totalCrossUnPnl: string;
+	availableBalance: string;
+	maxWithdrawAmount: string;
 	assets: FuturesAccountAsset[];
 	positions: FuturesAccountPosition[];
 };
@@ -373,29 +378,29 @@ export type FuturesSymbolConfig = {
 	symbol: string;
 	marginType: "ISOLATED" | "CROSSED";
 	isAutoAddMargin: boolean;
-	leverage: string;
+	leverage: number;
 	maxNotionalValue: string | "INF";
 };
 
 export type FuturesUserRateLimit = {
 	rateLimitType: "ORDERS";
 	interval: "SECOND" | "MINUTE" | "DAY";
-	intervalNum: string;
-	limit: string;
+	intervalNum: number;
+	limit: number;
 };
 
 export type FuturesLeverageBracketEntry = {
-	bracket: string;
-	initialLeverage: string;
-	notionalCap: string;
-	notionalFloor: string;
-	maintMarginRatio: string;
-	cum: string;
+	bracket: number;
+	initialLeverage: number;
+	notionalCap: number;
+	notionalFloor: number;
+	maintMarginRatio: number;
+	cum: number;
 };
 
 export type FuturesLeverageBracket = {
 	symbol: string;
-	notionalCoef?: string;
+	notionalCoef?: number;
 	brackets: FuturesLeverageBracketEntry[];
 };
 
@@ -433,9 +438,9 @@ export type FuturesIncomeHistory = {
 	income: string;
 	asset: string;
 	info: string;
-	time: string;
-	tranId: string;
-	tradeId?: string;
+	time: number;
+	tranId: number;
+	tradeId: string;
 };
 
 export type FuturesOrderSide = "BUY" | "SELL";

@@ -106,8 +106,8 @@ export class FuturesRestClient extends BaseRestClient {
 		startTime?: number;
 		endTime?: number;
 		limit?: number;
-	}): Promise<FuturesAggregateTrade> {
-		return this.marketRequest<FuturesAggregateTrade>({
+	}): Promise<FuturesAggregateTrade[]> {
+		return this.marketRequest<FuturesAggregateTrade[]>({
 			params,
 			endpoint: "/fapi/v1/aggTrades",
 		});
@@ -392,10 +392,8 @@ export class FuturesRestClient extends BaseRestClient {
 		});
 	}
 
-	public async symbolConfig(params: { symbol: string }): Promise<FuturesSymbolConfig>;
-	public async symbolConfig(): Promise<FuturesSymbolConfig[]>;
-	public async symbolConfig(params?: { symbol?: string }) {
-		return this.privateRequest({
+	public async symbolConfig(params?: { symbol?: string }): Promise<FuturesSymbolConfig[]> {
+		return this.privateRequest<FuturesSymbolConfig[]>({
 			method: "GET",
 			endpoint: "/fapi/v1/symbolConfig",
 			params,
@@ -408,10 +406,8 @@ export class FuturesRestClient extends BaseRestClient {
 		});
 	}
 
-	public async leverageBrackets(params: { symbol: string }): Promise<FuturesLeverageBracket>;
-	public async leverageBrackets(): Promise<FuturesLeverageBracket[]>;
-	public async leverageBrackets(params?: { symbol?: string }) {
-		return this.privateRequest({
+	public async leverageBrackets(params?: { symbol?: string }): Promise<FuturesLeverageBracket[]> {
+		return this.privateRequest<FuturesLeverageBracket[]>({
 			method: "GET",
 			endpoint: "/fapi/v1/leverageBracket",
 			params,

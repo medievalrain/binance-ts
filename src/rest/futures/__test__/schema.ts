@@ -103,23 +103,24 @@ export const futuresOrderBookSchema = z.object({
     lastUpdateId: z.number(),
     E: z.number(),
     T: z.number(),
-    bids: z.array(z.tuple([z.number(), z.number()])),
-    asks: z.array(z.tuple([z.number(), z.number()]))
+    bids: z.array(z.tuple([z.string(), z.string()])),
+    asks: z.array(z.tuple([z.string(), z.string()]))
 });
 
 export const futuresTradeSchema = z.object({
     id: z.number(),
-    price: z.number(),
-    qty: z.number(),
-    quoteQty: z.number(),
+    price: z.string(),
+    qty: z.string(),
+    quoteQty: z.string(),
     time: z.number(),
-    isBuyerMaker: z.boolean()
+    isBuyerMaker: z.boolean(),
+    isRPITrade: z.boolean()
 });
 
 export const futuresAggregateTradeSchema = z.object({
     a: z.number(),
-    p: z.number(),
-    q: z.number(),
+    p: z.string(),
+    q: z.string(),
     f: z.number(),
     l: z.number(),
     T: z.number(),
@@ -128,65 +129,68 @@ export const futuresAggregateTradeSchema = z.object({
 
 export const futuresKlineIntervalSchema = z.union([z.literal("1s"), z.literal("1m"), z.literal("3m"), z.literal("5m"), z.literal("30m"), z.literal("1h"), z.literal("2h"), z.literal("6h"), z.literal("8h"), z.literal("12h"), z.literal("3d"), z.literal("1M")]);
 
-export const futuresKlineSchema = z.tuple([z.number(), z.number(), z.number(), z.number(), z.number(), z.number(), z.number(), z.number(), z.number(), z.number(), z.number(), z.number()]);
+export const futuresKlineSchema = z.tuple([z.number(), z.string(), z.string(), z.string(), z.string(), z.string(), z.number(), z.string(), z.number(), z.string(), z.string(), z.string()]);
 
 export const futuresMarkPriceSchema = z.object({
     symbol: z.string(),
-    markPrice: z.number(),
-    indexPrice: z.number(),
-    estimatedSettlePrice: z.number(),
-    lastFundingRate: z.number(),
-    interestRate: z.number(),
+    markPrice: z.string(),
+    indexPrice: z.string(),
+    estimatedSettlePrice: z.string(),
+    lastFundingRate: z.string(),
+    interestRate: z.string(),
     nextFundingTime: z.number(),
     time: z.number()
 });
 
 export const futuresFundingRateSchema = z.object({
     symbol: z.string(),
-    fundingRate: z.number(),
+    fundingRate: z.string(),
     fundingTime: z.number(),
-    markPrice: z.number()
+    markPrice: z.string()
 });
 
 export const futuresFundingInfoSchema = z.object({
+    adjustedFundingRateCap: z.string(),
+    adjustedFundingRateFloor: z.string(),
+    disclaimer: z.boolean(),
+    fundingIntervalHours: z.number(),
     symbol: z.string(),
-    adjustedFundingRateCap: z.number(),
-    adjustedFundingRateFloor: z.number(),
-    fundingIntervalHours: z.number()
+    updateTime: z.number().nullable()
 });
 
 export const futuresTicker24hSchema = z.object({
-    symbol: z.string(),
-    priceChange: z.number(),
-    priceChangePercent: z.number(),
-    weightedAvgPrice: z.number(),
-    lastPrice: z.number(),
-    lastQty: z.number(),
-    openPrice: z.number(),
-    highPrice: z.number(),
-    lowPrice: z.number(),
-    volume: z.number(),
-    quoteVolume: z.number(),
-    openTime: z.number(),
     closeTime: z.number(),
+    count: z.number(),
     firstId: z.number(),
+    highPrice: z.string(),
     lastId: z.number(),
-    count: z.number()
+    lastPrice: z.string(),
+    lastQty: z.string(),
+    lowPrice: z.string(),
+    openPrice: z.string(),
+    openTime: z.number(),
+    priceChange: z.string(),
+    priceChangePercent: z.string(),
+    quoteVolume: z.string(),
+    symbol: z.string(),
+    volume: z.string(),
+    weightedAvgPrice: z.string()
 });
 
 export const futuresSymbolPriceSchema = z.object({
     symbol: z.string(),
-    price: z.number(),
+    price: z.string(),
     time: z.number()
 });
 
 export const futuresBookTickerSchema = z.object({
     symbol: z.string(),
-    bidPrice: z.number(),
-    bidQty: z.number(),
-    askPrice: z.number(),
-    askQty: z.number(),
-    time: z.number()
+    bidPrice: z.string(),
+    bidQty: z.string(),
+    askPrice: z.string(),
+    askQty: z.string(),
+    time: z.number(),
+    lastUpdateId: z.number()
 });
 
 export const futuresDeliveryPriceSchema = z.object({
@@ -195,42 +199,43 @@ export const futuresDeliveryPriceSchema = z.object({
 });
 
 export const futuresOpenInterestSchema = z.object({
-    openInterest: z.number(),
+    openInterest: z.string(),
     symbol: z.string(),
     time: z.number()
 });
 
 export const futuresOpenInterestStatsSchema = z.object({
     symbol: z.string(),
-    sumOpenInterest: z.number(),
-    sumOpenInterestValue: z.number(),
+    CMCCirculatingSupply: z.string(),
+    sumOpenInterest: z.string(),
+    sumOpenInterestValue: z.string(),
     timestamp: z.number()
 });
 
 export const futuresLongShortRatioSchema = z.object({
     symbol: z.string(),
-    longShortRatio: z.number(),
-    longAccount: z.number(),
-    shortAccount: z.number(),
+    longShortRatio: z.string(),
+    longAccount: z.string(),
+    shortAccount: z.string(),
     timestamp: z.number()
 });
 
 export const futuresOpenInterestPeriodSchema = z.union([z.literal("5m"), z.literal("15m"), z.literal("30m"), z.literal("1h"), z.literal("2h"), z.literal("4h"), z.literal("6h"), z.literal("12h"), z.literal("1d")]);
 
 export const futuresTakerBuySellRatioSchema = z.object({
-    buySellRatio: z.number(),
-    buyVol: z.number(),
-    sellVol: z.number(),
+    buySellRatio: z.string(),
+    buyVol: z.string(),
+    sellVol: z.string(),
     timestamp: z.number()
 });
 
 export const futuresBasisSchema = z.object({
-    indexPrice: z.number(),
+    indexPrice: z.string(),
     contractType: futuresContractTypeSchema,
-    basisRate: z.number(),
-    futuresPrice: z.number(),
-    annualizedBasisRate: z.string().optional(),
-    basis: z.number(),
+    basisRate: z.string(),
+    futuresPrice: z.string(),
+    annualizedBasisRate: z.string(),
+    basis: z.string(),
     pair: z.string(),
     timestamp: z.number()
 });
@@ -238,8 +243,8 @@ export const futuresBasisSchema = z.object({
 export const futuresCompositeIndexAssetSchema = z.object({
     baseAsset: z.string(),
     quoteAsset: z.string(),
-    weightInQuantity: z.number(),
-    weightInPercentage: z.number()
+    weightInQuantity: z.string(),
+    weightInPercentage: z.string()
 });
 
 export const futuresCompositeIndexSchema = z.object({
@@ -250,24 +255,24 @@ export const futuresCompositeIndexSchema = z.object({
 });
 
 export const futuresAssetIndexSchema = z.object({
+    askBuffer: z.string(),
+    askRate: z.string(),
+    autoExchangeAskBuffer: z.string(),
+    autoExchangeAskRate: z.string(),
+    autoExchangeBidBuffer: z.string(),
+    autoExchangeBidRate: z.string(),
+    bidBuffer: z.string(),
+    bidRate: z.string(),
+    index: z.string(),
     symbol: z.string(),
-    time: z.number(),
-    index: z.number(),
-    bidBuffer: z.number(),
-    askBuffer: z.number(),
-    bidRate: z.number(),
-    askRate: z.number(),
-    autoExchangeBidBuffer: z.number(),
-    autoExchangeAskBuffer: z.number(),
-    autoExchangeBidRate: z.number(),
-    autoExchangeAskRate: z.number()
+    time: z.number()
 });
 
 export const futuresIndexPriceConstituentItemSchema = z.object({
     exchange: z.string(),
     symbol: z.string(),
-    price: z.number(),
-    weight: z.number()
+    price: z.string(),
+    weight: z.string()
 });
 
 export const futuresIndexPriceConstituentsSchema = z.object({
@@ -278,7 +283,7 @@ export const futuresIndexPriceConstituentsSchema = z.object({
 
 export const futuresInsuranceBalanceAssetSchema = z.object({
     asset: z.string(),
-    marginBalance: z.number(),
+    marginBalance: z.string(),
     updateTime: z.number()
 });
 
@@ -290,28 +295,28 @@ export const futuresInsuranceBalanceSchema = z.object({
 export const futuresAccountBalanceSchema = z.object({
     accountAlias: z.string(),
     asset: z.string(),
-    balance: z.number(),
-    crossWalletBalance: z.number(),
-    crossUnPnl: z.number(),
-    availableBalance: z.number(),
-    maxWithdrawAmount: z.number(),
+    balance: z.string(),
+    crossWalletBalance: z.string(),
+    crossUnPnl: z.string(),
+    availableBalance: z.string(),
+    maxWithdrawAmount: z.string(),
     marginAvailable: z.boolean(),
     updateTime: z.number()
 });
 
 export const futuresAccountAssetSchema = z.object({
     asset: z.string(),
-    walletBalance: z.number(),
-    unrealizedProfit: z.number(),
-    marginBalance: z.number(),
-    maintMargin: z.number(),
-    initialMargin: z.number(),
-    positionInitialMargin: z.number(),
-    openOrderInitialMargin: z.number(),
-    crossWalletBalance: z.number(),
-    crossUnPnl: z.number(),
-    availableBalance: z.number(),
-    maxWithdrawAmount: z.number(),
+    walletBalance: z.string(),
+    unrealizedProfit: z.string(),
+    marginBalance: z.string(),
+    maintMargin: z.string(),
+    initialMargin: z.string(),
+    positionInitialMargin: z.string(),
+    openOrderInitialMargin: z.string(),
+    crossWalletBalance: z.string(),
+    crossUnPnl: z.string(),
+    availableBalance: z.string(),
+    maxWithdrawAmount: z.string(),
     updateTime: z.number(),
     marginAvailable: z.boolean().optional()
 });
@@ -319,28 +324,28 @@ export const futuresAccountAssetSchema = z.object({
 export const futuresAccountPositionSchema = z.object({
     symbol: z.string(),
     positionSide: z.string(),
-    positionAmt: z.number(),
-    unrealizedProfit: z.number(),
-    isolatedMargin: z.number(),
-    notional: z.number(),
-    isolatedWallet: z.number(),
-    initialMargin: z.number(),
-    maintMargin: z.number(),
+    positionAmt: z.string(),
+    unrealizedProfit: z.string(),
+    isolatedMargin: z.string(),
+    notional: z.string(),
+    isolatedWallet: z.string(),
+    initialMargin: z.string(),
+    maintMargin: z.string(),
     updateTime: z.number()
 });
 
 export const futuresAccountInfoSchema = z.object({
-    totalInitialMargin: z.number(),
-    totalMaintMargin: z.number(),
-    totalWalletBalance: z.number(),
-    totalUnrealizedProfit: z.number(),
-    totalMarginBalance: z.number(),
-    totalPositionInitialMargin: z.number(),
-    totalOpenOrderInitialMargin: z.number(),
-    totalCrossWalletBalance: z.number(),
-    totalCrossUnPnl: z.number(),
-    availableBalance: z.number(),
-    maxWithdrawAmount: z.number(),
+    totalInitialMargin: z.string(),
+    totalMaintMargin: z.string(),
+    totalWalletBalance: z.string(),
+    totalUnrealizedProfit: z.string(),
+    totalMarginBalance: z.string(),
+    totalPositionInitialMargin: z.string(),
+    totalOpenOrderInitialMargin: z.string(),
+    totalCrossWalletBalance: z.string(),
+    totalCrossUnPnl: z.string(),
+    availableBalance: z.string(),
+    maxWithdrawAmount: z.string(),
     assets: z.array(futuresAccountAssetSchema),
     positions: z.array(futuresAccountPositionSchema)
 });
@@ -365,29 +370,29 @@ export const futuresSymbolConfigSchema = z.object({
     symbol: z.string(),
     marginType: z.union([z.literal("ISOLATED"), z.literal("CROSSED")]),
     isAutoAddMargin: z.boolean(),
-    leverage: z.string(),
+    leverage: z.number(),
     maxNotionalValue: z.union([z.string(), z.literal("INF")])
 });
 
 export const futuresUserRateLimitSchema = z.object({
     rateLimitType: z.literal("ORDERS"),
     interval: z.union([z.literal("SECOND"), z.literal("MINUTE"), z.literal("DAY")]),
-    intervalNum: z.string(),
-    limit: z.string()
+    intervalNum: z.number(),
+    limit: z.number()
 });
 
 export const futuresLeverageBracketEntrySchema = z.object({
-    bracket: z.string(),
-    initialLeverage: z.string(),
-    notionalCap: z.string(),
-    notionalFloor: z.string(),
-    maintMarginRatio: z.string(),
-    cum: z.string()
+    bracket: z.number(),
+    initialLeverage: z.number(),
+    notionalCap: z.number(),
+    notionalFloor: z.number(),
+    maintMarginRatio: z.number(),
+    cum: z.number()
 });
 
 export const futuresLeverageBracketSchema = z.object({
     symbol: z.string(),
-    notionalCoef: z.string().optional(),
+    notionalCoef: z.number().optional(),
     brackets: z.array(futuresLeverageBracketEntrySchema)
 });
 
@@ -403,9 +408,9 @@ export const futuresIncomeHistorySchema = z.object({
     income: z.string(),
     asset: z.string(),
     info: z.string(),
-    time: z.string(),
-    tranId: z.string(),
-    tradeId: z.string().optional()
+    time: z.number(),
+    tranId: z.number(),
+    tradeId: z.string()
 });
 
 export const futuresOrderSideSchema = z.union([z.literal("BUY"), z.literal("SELL")]);
