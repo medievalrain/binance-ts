@@ -14,14 +14,14 @@ beforeAll(async () => {
 
 describe("Binance Spot Public REST API", () => {
 	describe("/api/v3/ping - Test Connectivity", () => {
-		it("should connect to the server", async () => {
+		it("Should match schemar", async () => {
 			const response = await client.testConnectivity();
 			expect(response).toEqual(expect.schemaMatching(spotTestConnectivitySchema));
 		});
 	});
 
 	describe("/api/v3/time - Check Server Time", () => {
-		it("should return server time", async () => {
+		it("Should match schema", async () => {
 			const response = await client.checkServerTime();
 			expect(response).toEqual(expect.schemaMatching(spotCheckServerTimeSchema));
 		});
