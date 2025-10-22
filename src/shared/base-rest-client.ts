@@ -1,7 +1,7 @@
 import { Client, Dispatcher } from "undici";
 
 import { ApiError, MalformedParamError, ValidationError, WeightError } from "./api-error";
-import { z } from "zod";
+import { z, ZodType } from "zod";
 import { ErrorResponseSchema } from "./schema";
 import { createHmac } from "node:crypto";
 
@@ -73,7 +73,7 @@ export class BaseRestClient {
 		}
 	}
 
-	private async parseResponse<T extends z.ZodType>(schema: T, response: Dispatcher.ResponseData, endpoint: string) {
+	private async parseResponse<T extends ZodType>(schema: T, response: Dispatcher.ResponseData, endpoint: string) {
 		const json = await response.body.json();
 
 		if (response.statusCode === 200) {
@@ -91,7 +91,7 @@ export class BaseRestClient {
 		throw this.parseErrorResponse(endpoint, response.statusCode, json);
 	}
 
-	protected async publicRequest<T extends z.ZodType>({
+	protected async publicRequest<T extends ZodType>({
 		endpoint,
 		params,
 		schema,
@@ -113,7 +113,7 @@ export class BaseRestClient {
 		return this.parseResponse(schema, response, endpoint);
 	}
 
-	protected async privateRequest<T extends z.ZodType>({
+	protected async privateRequest<T extends ZodType>({
 		endpoint,
 		params,
 		schema,

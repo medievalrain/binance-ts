@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { ZodError, ZodType, output as ZodOutput } from "zod";
 
 export class ApiError extends Error {
 	public endpoint: string;
@@ -9,11 +9,11 @@ export class ApiError extends Error {
 	}
 }
 
-export class ValidationError<T extends z.ZodType> extends ApiError {
-	public error?: z.ZodError<z.output<T>>;
+export class ValidationError<T extends ZodType> extends ApiError {
+	public error?: ZodError<ZodOutput<T>>;
 	public input: unknown;
 
-	constructor({ error, input, endpoint }: { error?: z.ZodError<z.output<T>>; input?: unknown; endpoint: string }) {
+	constructor({ error, input, endpoint }: { error?: ZodError<ZodOutput<T>>; input?: unknown; endpoint: string }) {
 		super({ endpoint, metadata: { error, input } });
 		this.error = error;
 		this.input = input;
