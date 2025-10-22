@@ -58,6 +58,7 @@ import type {
 	FuturesNewOrderSchema,
 	FuturesContractTypeSchema,
 	FuturesUnderlyingTypeSchema,
+	FuturesGetListenKeySchema,
 } from "./schema";
 
 export type FuturesKlineInterval = "1s" | "1m" | "3m" | "5m" | "30m" | "1h" | "2h" | "6h" | "8h" | "12h" | "3d" | "1M";
@@ -149,3 +150,5 @@ export type FuturesPriceMatch = z.infer<typeof FuturesPriceMatchSchema>;
 export type FuturesSelfTradePrevention = z.infer<typeof FuturesSelfTradePreventionSchema>;
 
 export type FuturesNewOrder = z.infer<typeof FuturesNewOrderSchema>;
+
+export type FuturesGetListenKey = z.infer<typeof FuturesGetListenKeySchema>;

@@ -33,6 +33,7 @@ import {
 	FuturesTestConnectivitySchema,
 	FuturesTicker24hSchema,
 	FuturesUserRateLimitSchema,
+	FuturesGetListenKeySchema,
 } from "./schema";
 import { BaseRestClient } from "@/shared/base-rest-client";
 
@@ -519,6 +520,14 @@ export class FuturesRestClient extends BaseRestClient {
 			endpoint: "/fapi/v1/order",
 			params,
 			schema: FuturesNewOrderSchema,
+		});
+	}
+
+	public async getListenKey() {
+		return this.privateRequest({
+			method: "POST",
+			endpoint: "/fapi/v1/listenKey",
+			schema: FuturesGetListenKeySchema,
 		});
 	}
 }

@@ -540,3 +540,7 @@ export const FuturesNewOrderSchema = z.object({
 	selfTradePreventionMode: FuturesSelfTradePreventionSchema.optional(),
 	goodTillDate: z.number().optional(),
 });
+
+export const FuturesGetListenKeySchema = z.object({
+	listenKey: z.string(),
+});

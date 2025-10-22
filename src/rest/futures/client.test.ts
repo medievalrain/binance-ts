@@ -749,7 +749,7 @@ describe("Binance Futures Public REST API", () => {
 		});
 	});
 
-	describe("/fapi/v1/leverageBracket - Notional and Leverage Brackets", () => {
+	describe("/fapi/v1/leverageBracket - Notional and Leverage Brackets", { timeout: 10000 }, () => {
 		it("returns leverage brackets for all symbols", async () => {
 			const result = await client.leverageBrackets();
 
@@ -803,6 +803,13 @@ describe("Binance Futures Public REST API", () => {
 				expect(entry.symbol).toBe("BTCUSDT");
 				expect(entry.incomeType).toBe("COMMISSION");
 			}
+		});
+	});
+
+	describe("/fapi/v1/listenKey - Get Listen key", () => {
+		it("returns non-empty listen key", async () => {
+			const result = await client.getListenKey();
+			expect(result.listenKey.length).toBeGreaterThan(0);
 		});
 	});
 
