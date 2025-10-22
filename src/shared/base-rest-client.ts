@@ -1,156 +1,91 @@
-import { Client, Dispatcher } from "undici";
-
-import { ApiError, MalformedParamError, ValidationError, WeightError } from "./api-error";
-import { z, ZodType } from "zod";
-import { ErrorResponseSchema } from "./schema";
-import { createHmac } from "node:crypto";
+import { ApiError, MalformedParamError, WeightError } from "./api-error";
 
 export type RawSearchParams = Record<string, string | undefined | null | string[] | number | boolean>;
 
+type ErrorResponse = {
+	code: number;
+	msg: string;
+};
+
 export class BaseRestClient {
-	private httpCleint: Client;
 	private apiKey?: string;
 	private apiSecret?: string;
+	private baseUrl: string;
 
-	constructor({
-		baseUrl,
-		apiKey,
-		apiSecret,
-		httpOptions,
-	}: {
-		baseUrl: string;
-		apiKey?: string;
-		apiSecret?: string;
-		httpOptions?: Client.Options;
-	}) {
+	constructor({ baseUrl, apiKey, apiSecret }: { baseUrl: string; apiKey?: string; apiSecret?: string }) {
 		this.apiKey = apiKey;
 		this.apiSecret = apiSecret;
-		this.httpCleint = new Client(baseUrl, {
-			allowH2: true,
-			connect: {
-				maxVersion: "TLSv1.2",
-				...httpOptions?.connect,
-			},
-			...httpOptions,
-		});
+		this.baseUrl = baseUrl;
 	}
 
-	private toSearchParams(rawParams?: RawSearchParams) {
-		if (!rawParams) {
-			return {};
+	protected marketRequest = async <T extends object>({
+		endpoint,
+		params,
+		withApiKey,
+	}: {
+		endpoint: string;
+		params?: RawSearchParams;
+		withApiKey?: boolean;
+	}): Promise<T> => {
+		const searchParams = this.toSearchParams(params);
+		const url = new URL(endpoint, this.baseUrl);
+		if (searchParams) {
+			url.search = searchParams;
+		}
+		const requestOptions: RequestInit = { keepalive: true };
+		if (withApiKey) {
+			if (!this.apiKey) {
+				throw new ApiError({
+					endpoint,
+					metadata: { cause: "Empty credentials" },
+				});
+			}
+			requestOptions.headers = {
+				"X-MBX-APIKEY": this.apiKey,
+			};
 		}
 
-		return Object.entries(rawParams).reduce<Record<string, string>>((acc, [key, value]) => {
+		const response = await fetch(url.toString(), requestOptions);
+		const json = await response.json();
+		if (response.status === 200) {
+			return json as T;
+		}
+		throw this.parseErrorResponse(endpoint, response.status, json);
+	};
+
+	private toSearchParams(rawParams?: RawSearchParams): string {
+		if (!rawParams) {
+			return "";
+		}
+		const searchParams = new URLSearchParams();
+		for (const [key, value] of Object.entries(rawParams)) {
 			if (Array.isArray(value)) {
-				acc[key] = JSON.stringify(value);
-				return acc;
+				searchParams.append(key, JSON.stringify(value));
 			}
 			if (value !== undefined && value !== null) {
-				acc[key] = String(value);
+				searchParams.append(key, String(value));
 			}
-			return acc;
-		}, {});
+		}
+		return searchParams.toString();
 	}
 
-	private parseErrorResponse(endpoint: string, statusCode: number, json: unknown) {
-		const result = ErrorResponseSchema.safeParse(json);
-		if (result.error) {
-			throw new ApiError({ endpoint, metadata: { error: result.error, json } });
+	private parseErrorResponse(endpoint: string, statusCode: number, json: ErrorResponse): void {
+		if (!json.code || !json.msg) {
+			throw new ApiError({ endpoint, metadata: { json } });
 		}
 
 		switch (statusCode) {
 			case 418: {
-				throw new WeightError({ message: result.data.msg, endpoint });
+				throw new WeightError({ message: json.msg, endpoint });
 			}
 
 			case 400: {
-				throw new MalformedParamError({ endpoint, message: result.data.msg });
+				throw new MalformedParamError({ endpoint, message: json.msg });
 			}
 
 			default: {
 				throw new ApiError({ endpoint, metadata: { json } });
 			}
 		}
-	}
-
-	private async parseResponse<T extends ZodType>(schema: T, response: Dispatcher.ResponseData, endpoint: string) {
-		const json = await response.body.json();
-
-		if (response.statusCode === 200) {
-			const result = z.safeParse(schema, json);
-			if (result.error) {
-				throw new ValidationError({
-					endpoint,
-					input: json,
-					error: result.error,
-				});
-			}
-
-			return result.data;
-		}
-		throw this.parseErrorResponse(endpoint, response.statusCode, json);
-	}
-
-	protected async publicRequest<T extends ZodType>({
-		endpoint,
-		params,
-		schema,
-	}: {
-		endpoint: string;
-		params?: RawSearchParams;
-		schema: T;
-	}) {
-		const searchParams = this.toSearchParams(params);
-
-		const response = await this.httpCleint.request({
-			method: "GET",
-			path: endpoint,
-			query: searchParams,
-			headers: {
-				"X-MBX-APIKEY": this.apiKey,
-			},
-		});
-		return this.parseResponse(schema, response, endpoint);
-	}
-
-	protected async privateRequest<T extends ZodType>({
-		endpoint,
-		params,
-		schema,
-		method,
-	}: {
-		endpoint: string;
-		params?: RawSearchParams;
-		method: "GET" | "POST" | "DELETE";
-		schema: T;
-	}) {
-		if (!this.apiKey || !this.apiSecret) {
-			throw new ApiError({
-				endpoint,
-				metadata: { cause: "Empty credentials" },
-			});
-		}
-
-		const searchParams = this.toSearchParams(params);
-
-		searchParams["timestamp"] = new Date().getTime().toString();
-		const signature = this.sign(new URLSearchParams(searchParams).toString(), this.apiSecret);
-		searchParams["signature"] = signature;
-
-		const response = await this.httpCleint.request({
-			method,
-			path: endpoint,
-			query: method !== "POST" ? searchParams : undefined,
-			body: method === "POST" ? new URLSearchParams(searchParams).toString() : undefined,
-			headers: {
-				"X-MBX-APIKEY": this.apiKey,
-			},
-		});
-
-		return this.parseResponse(schema, response, endpoint);
-	}
-
-	private sign(message: string, secret: string) {
-		return createHmac("sha256", secret).update(message).digest("hex");
 	}
 }

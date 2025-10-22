@@ -1,32 +1,28 @@
 import { BaseRestClient } from "@/shared/base-rest-client";
-import type { Client } from "undici";
-import { SpotCheckServerTimeSchema, SpotTestConnectivitySchema } from "./schema";
+
+import type { SpotCheckServerTime, SpotTestConnectivity } from "./types";
 
 export class SpotRestClient extends BaseRestClient {
 	constructor({
 		baseUrl = "https://api.binance.com",
 		apiKey,
 		apiSecret,
-		httpOptions,
 	}: {
 		apiKey?: string;
 		apiSecret?: string;
 		baseUrl?: string;
-		httpOptions?: Client.Options;
 	}) {
-		super({ baseUrl, apiKey, apiSecret, httpOptions });
+		super({ baseUrl, apiKey, apiSecret });
 	}
 
-	public async testConnectivity() {
-		return this.publicRequest({
+	public async testConnectivity(): Promise<SpotTestConnectivity> {
+		return this.marketRequest<SpotTestConnectivity>({
 			endpoint: "/api/v3/ping",
-			schema: SpotTestConnectivitySchema,
 		});
 	}
-	public async checkServerTime() {
-		return this.publicRequest({
+	public async checkServerTime(): Promise<SpotCheckServerTime> {
+		return this.marketRequest<SpotCheckServerTime>({
 			endpoint: "/api/v3/time",
-			schema: SpotCheckServerTimeSchema,
 		});
 	}
 }
