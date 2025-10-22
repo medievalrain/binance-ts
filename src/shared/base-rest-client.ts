@@ -22,27 +22,14 @@ export class BaseRestClient {
 	protected marketRequest = async <T extends object>({
 		endpoint,
 		params,
-		withApiKey,
 	}: {
 		endpoint: string;
 		params?: RawSearchParams;
-		withApiKey?: boolean;
 	}): Promise<NoInfer<T>> => {
 		const searchParams = this.toSearchParams(params);
 		const url = new URL(endpoint, this.baseUrl);
 		url.search = searchParams.toString();
 		const requestOptions: RequestInit = { keepalive: true };
-		if (withApiKey) {
-			if (!this.apiKey) {
-				throw new ApiError({
-					endpoint,
-					metadata: { cause: "Empty credentials" },
-				});
-			}
-			requestOptions.headers = {
-				"X-MBX-APIKEY": this.apiKey,
-			};
-		}
 
 		const response = await fetch(url.toString(), requestOptions);
 		const json = await response.json();
