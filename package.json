@@ -34,8 +34,7 @@
 		"zod": "4.1.12"
 	},
 	"dependencies": {
-		"@medievalrain/emitter": "0.2.17",
-		"undici": "7.16.0"
+		"@medievalrain/emitter": "0.2.17"
 	},
 	"repository": {
 		"type": "git",

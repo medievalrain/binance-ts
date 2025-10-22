@@ -1,5 +1,4 @@
 import type { CallbackOptions } from "@medievalrain/emitter";
-import type { WebSocket } from "undici";
 
 export type ConnectionSuccessEvent = {
 	result: null;

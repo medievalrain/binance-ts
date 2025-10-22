@@ -1,4 +1,3 @@
-import { WebSocket, MessageEvent } from "undici";
 import type {
 	ChannelsMap,
 	ConnectionEvent,
