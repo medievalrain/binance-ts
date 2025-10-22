@@ -1,6 +1,6 @@
 {
 	"name": "@medievalrain/binance-ts",
-	"version": "0.9.0",
+	"version": "0.9.1",
 	"description": "Binance API SDK",
 	"access": "public",
 	"type": "module",
