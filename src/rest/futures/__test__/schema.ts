@@ -22,19 +22,19 @@ export const futuresExchangeInfoAssetSchema = z.object({
 
 export const futuresExchangeInfoFilterSchema = z.union([z.object({
         filterType: z.literal("PRICE_FILTER"),
-        maxPrice: z.number(),
-        minPrice: z.number(),
-        tickSize: z.number()
+        minPrice: z.string(),
+        tickSize: z.string(),
+        maxPrice: z.string()
     }), z.object({
         filterType: z.literal("LOT_SIZE"),
-        maxQty: z.number(),
-        minQty: z.number(),
-        stepSize: z.number()
+        minQty: z.string(),
+        stepSize: z.string(),
+        maxQty: z.string()
     }), z.object({
         filterType: z.literal("MARKET_LOT_SIZE"),
-        maxQty: z.number(),
-        minQty: z.number(),
-        stepSize: z.number()
+        maxQty: z.string(),
+        minQty: z.string(),
+        stepSize: z.string()
     }), z.object({
         filterType: z.literal("MAX_NUM_ORDERS"),
         limit: z.number()
@@ -46,14 +46,12 @@ export const futuresExchangeInfoFilterSchema = z.union([z.object({
         notional: z.string()
     }), z.object({
         filterType: z.literal("PERCENT_PRICE"),
-        multiplierUp: z.number(),
-        multiplierDown: z.number().optional(),
-        multiplierDecimal: z.number().optional()
+        multiplierUp: z.string(),
+        multiplierDown: z.string(),
+        multiplierDecimal: z.string()
     }), z.object({
         filterType: z.literal("POSITION_RISK_CONTROL"),
-        positionControlSide: z.literal("NONE"),
-        multiplierDown: z.number().optional(),
-        multiplierDecimal: z.number().optional()
+        positionControlSide: z.literal("NONE")
     })]);
 
 export const futuresContractTypeSchema = z.union([z.literal("PERPETUAL"), z.literal("CURRENT_QUARTER"), z.literal("NEXT_QUARTER")]);
@@ -61,6 +59,8 @@ export const futuresContractTypeSchema = z.union([z.literal("PERPETUAL"), z.lite
 export const futuresUnderlyingTypeSchema = z.union([z.literal("COIN"), z.literal("INDEX"), z.literal("PREMARKET")]);
 
 export const futuresOrderTypeSchema = z.union([z.literal("LIMIT"), z.literal("MARKET"), z.literal("STOP"), z.literal("TAKE_PROFIT"), z.literal("STOP_MARKET"), z.literal("TAKE_PROFIT_MARKET"), z.literal("TRAILING_STOP_MARKET")]);
+
+export const permissionSetSchema = z.union([z.literal("COPY"), z.literal("GRID"), z.literal("DCA")]);
 
 export const futuresExchangeInfoSymbolSchema = z.object({
     symbol: z.string(),
@@ -80,14 +80,14 @@ export const futuresExchangeInfoSymbolSchema = z.object({
     quotePrecision: z.number(),
     underlyingType: futuresUnderlyingTypeSchema,
     underlyingSubType: z.array(z.string()),
-    permissionSets: z.array(z.union([z.literal("COPY"), z.literal("GRID")])),
+    permissionSets: z.array(permissionSetSchema),
     settlePlan: z.number().optional(),
     triggerProtect: z.string(),
     filters: z.array(futuresExchangeInfoFilterSchema),
     OrderType: z.array(futuresOrderTypeSchema).optional(),
     timeInForce: z.array(z.string()),
-    liquidationFee: z.number(),
-    marketTakeBound: z.number()
+    liquidationFee: z.string(),
+    marketTakeBound: z.string()
 });
 
 export const futuresExchangeInfoSchema = z.object({

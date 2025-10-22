@@ -17,21 +17,21 @@ export type FuturesExchangeInfoAsset = {
 export type FuturesExchangeInfoFilter =
 	| {
 			filterType: "PRICE_FILTER";
-			maxPrice: number;
-			minPrice: number;
-			tickSize: number;
+			minPrice: string;
+			tickSize: string;
+			maxPrice: string;
 	  }
 	| {
 			filterType: "LOT_SIZE";
-			maxQty: number;
-			minQty: number;
-			stepSize: number;
+			minQty: string;
+			stepSize: string;
+			maxQty: string;
 	  }
 	| {
 			filterType: "MARKET_LOT_SIZE";
-			maxQty: number;
-			minQty: number;
-			stepSize: number;
+			maxQty: string;
+			minQty: string;
+			stepSize: string;
 	  }
 	| {
 			filterType: "MAX_NUM_ORDERS";
@@ -47,15 +47,13 @@ export type FuturesExchangeInfoFilter =
 	  }
 	| {
 			filterType: "PERCENT_PRICE";
-			multiplierUp: number;
-			multiplierDown?: number;
-			multiplierDecimal?: number;
+			multiplierUp: string;
+			multiplierDown: string;
+			multiplierDecimal: string;
 	  }
 	| {
 			filterType: "POSITION_RISK_CONTROL";
 			positionControlSide: "NONE";
-			multiplierDown?: number;
-			multiplierDecimal?: number;
 	  };
 
 export type FuturesContractType = "PERPETUAL" | "CURRENT_QUARTER" | "NEXT_QUARTER";
@@ -69,6 +67,8 @@ export type FuturesOrderType =
 	| "STOP_MARKET"
 	| "TAKE_PROFIT_MARKET"
 	| "TRAILING_STOP_MARKET";
+
+export type PermissionSet = "COPY" | "GRID" | "DCA";
 
 export type FuturesExchangeInfoSymbol = {
 	symbol: string;
@@ -88,14 +88,14 @@ export type FuturesExchangeInfoSymbol = {
 	quotePrecision: number;
 	underlyingType: FuturesUnderlyingType;
 	underlyingSubType: string[];
-	permissionSets: ("COPY" | "GRID")[];
+	permissionSets: PermissionSet[];
 	settlePlan?: number;
 	triggerProtect: string;
 	filters: FuturesExchangeInfoFilter[];
 	OrderType?: FuturesOrderType[];
 	timeInForce: string[];
-	liquidationFee: number;
-	marketTakeBound: number;
+	liquidationFee: string;
+	marketTakeBound: string;
 };
 
 export type FuturesExchangeInfo = {
