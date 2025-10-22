@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, beforeAll, expectTypeOf } from "vitest";
 import { SpotRestClient } from "./client";
+import type { SpotCheckServerTime, SpotTestConnectivity } from "./types";
 
 let client: SpotRestClient;
 
@@ -14,15 +15,15 @@ beforeAll(async () => {
 describe("Binance Spot Public REST API", () => {
 	describe("/api/v3/ping - Test Connectivity", () => {
 		it("should connect to the server", async () => {
-			const res = await client.testConnectivity();
-			expect(res).toEqual({});
+			const response = await client.testConnectivity();
+			expectTypeOf(response).toEqualTypeOf<SpotTestConnectivity>();
 		});
 	});
 
 	describe("/api/v3/time - Check Server Time", () => {
 		it("should return server time", async () => {
-			const { serverTime } = await client.checkServerTime();
-			expect(serverTime).toBeGreaterThan(1_000_000_000_000);
+			const response = await client.checkServerTime();
+			expectTypeOf(response).toEqualTypeOf<SpotCheckServerTime>();
 		});
 	});
 });

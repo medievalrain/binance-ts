@@ -9,5 +9,9 @@ export default defineConfig({
 	},
 	test: {
 		setupFiles: ["dotenv/config"],
+		typecheck: {
+			enabled: true,
+			include: ["src/**/*.test.ts"],
+		},
 	},
 });
