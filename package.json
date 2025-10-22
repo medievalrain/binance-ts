@@ -21,19 +21,19 @@
 		"test": "vitest"
 	},
 	"devDependencies": {
-		"@types/node": "24.8.0",
+		"@types/node": "24.9.1",
 		"date-fns": "4.1.0",
 		"dotenv": "17.2.3",
-		"oxlint": "1.23.0",
+		"oxlint": "1.24.0",
 		"prettier": "3.6.2",
-		"tsdown": "0.15.7",
+		"tsdown": "0.15.9",
 		"typescript": "5.9.3",
-		"vitest": "4.0.0-beta.18"
+		"vitest": "4.0.1"
 	},
 	"dependencies": {
 		"@medievalrain/emitter": "0.2.17",
-		"undici": "7.16.0",
-		"zod": "^4"
+		"undici": "^7.16.0",
+		"zod": "^4.1.12"
 	},
 	"repository": {
 		"type": "git",
