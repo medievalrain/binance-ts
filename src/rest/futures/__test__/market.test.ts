@@ -24,17 +24,6 @@ import {
 	futuresCompositeIndexSchema,
 	futuresAssetIndexSchema,
 	futuresIndexPriceConstituentsSchema,
-	futuresInsuranceBalanceSchema,
-	futuresAccountBalanceSchema,
-	futuresAccountInfoSchema,
-	futuresCommissionRateSchema,
-	futuresAccountConfigSchema,
-	futuresSymbolConfigSchema,
-	futuresUserRateLimitSchema,
-	futuresLeverageBracketSchema,
-	futuresPositionModeSchema,
-	futuresIncomeHistorySchema,
-	futuresGetListenKeySchema,
 } from "./schema";
 
 let client: FuturesRestClient;
@@ -53,8 +42,7 @@ beforeAll(async () => {
 	await client.testConnectivity();
 });
 
-describe("Binance Futures REST API", () => {
-	// ---------- Public ----------
+describe("Binance Futures REST API - Public Endpoints", () => {
 	describe("/fapi/v1/ping - Test Connectivity", () => {
 		it("matches schema", async () => {
 			const res = await client.testConnectivity();
@@ -300,93 +288,6 @@ describe("Binance Futures REST API", () => {
 		it("matches schema", async () => {
 			const res = await client.indexPriceConstituents({ symbol: SYMBOL });
 			expect(res).toEqual(expect.schemaMatching(futuresIndexPriceConstituentsSchema));
-		});
-	});
-
-	describe("/fapi/v1/insuranceBalance - Insurance Balance", () => {
-		it("by symbol: matches single-object schema", async () => {
-			const res = await client.insuranceBalance({ symbol: SYMBOL });
-			expect(res).toEqual(expect.schemaMatching(futuresInsuranceBalanceSchema));
-		});
-
-		it("all symbols: matches array schema", async () => {
-			const res = await client.insuranceBalance();
-			expect(res).toEqual(expect.schemaMatching(futuresInsuranceBalanceSchema.array()));
-		});
-	});
-
-	describe("/fapi/v3/balance - Account Balance", () => {
-		it("matches schema", async () => {
-			const res = await client.accountBalance();
-			expect(res).toEqual(expect.schemaMatching(futuresAccountBalanceSchema.array()));
-		});
-	});
-
-	describe("/fapi/v3/account - Account Information", () => {
-		it("matches schema", async () => {
-			const res = await client.accountInformation();
-			expect(res).toEqual(expect.schemaMatching(futuresAccountInfoSchema));
-		});
-	});
-
-	describe("/fapi/v1/commissionRate - User Commission Rate", () => {
-		it("matches schema", async () => {
-			const res = await client.userCommissionRate({ symbol: SYMBOL });
-			expect(res).toEqual(expect.schemaMatching(futuresCommissionRateSchema));
-		});
-	});
-
-	describe("/fapi/v1/accountConfig - Account Config", () => {
-		it("matches schema", async () => {
-			const res = await client.accountConfig();
-			expect(res).toEqual(expect.schemaMatching(futuresAccountConfigSchema));
-		});
-	});
-
-	describe("/fapi/v1/symbolConfig - Symbol Config", () => {
-		it("by symbol: matches single-object schema", async () => {
-			const res = await client.symbolConfig({ symbol: SYMBOL });
-			expect(res).toEqual(expect.schemaMatching(futuresSymbolConfigSchema.array()));
-		});
-	});
-
-	describe("/fapi/v1/rateLimit/order - User Rate Limit", () => {
-		it("matches schema", async () => {
-			const res = await client.userRateLimit();
-			expect(res).toEqual(expect.schemaMatching(futuresUserRateLimitSchema.array()));
-		});
-	});
-
-	describe("/fapi/v1/leverageBracket - Leverage Brackets", () => {
-		it("by symbol: matches array schema", async () => {
-			const res = await client.leverageBrackets({ symbol: SYMBOL });
-			expect(res).toEqual(expect.schemaMatching(futuresLeverageBracketSchema.array()));
-		});
-
-		it("all symbols: matches array schema", async () => {
-			const res = await client.leverageBrackets();
-			expect(res).toEqual(expect.schemaMatching(futuresLeverageBracketSchema.array()));
-		});
-	});
-
-	describe("/fapi/v1/positionSide/dual - Position Mode", () => {
-		it("matches schema", async () => {
-			const res = await client.positionMode();
-			expect(res).toEqual(expect.schemaMatching(futuresPositionModeSchema));
-		});
-	});
-
-	describe("/fapi/v1/income - Income History", () => {
-		it("matches schema", async () => {
-			const res = await client.incomeHistory({ limit: 10 });
-			expect(res).toEqual(expect.schemaMatching(futuresIncomeHistorySchema.array()));
-		});
-	});
-
-	describe("/fapi/v1/listenKey - Get Listen Key", () => {
-		it("matches schema", async () => {
-			const res = await client.getListenKey();
-			expect(res).toEqual(expect.schemaMatching(futuresGetListenKeySchema));
 		});
 	});
 });
