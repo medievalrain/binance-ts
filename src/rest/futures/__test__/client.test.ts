@@ -1,7 +1,7 @@
 import { describe, it, beforeAll, expect } from "vitest";
 import { FuturesRestClient } from "../client";
 
-import { FuturesCheckServerTimeSchema, FuturesTestConnectivitySchema } from "./schema";
+import { futuresCheckServerTimeSchema, futuresExchangeInfoSchema, futuresTestConnectivitySchema } from "./schema";
 
 let client: FuturesRestClient;
 
@@ -12,16 +12,23 @@ beforeAll(async () => {
 
 describe("Binance Futures Public REST API", () => {
 	describe("/fapi/v1/ping - Test Connectivity", () => {
-		it("should connect to the server", async () => {
+		it("Should match schema", async () => {
 			const response = await client.testConnectivity();
-			expect(response).toEqual(expect.schemaMatching(FuturesTestConnectivitySchema));
+			expect(response).toEqual(expect.schemaMatching(futuresTestConnectivitySchema));
 		});
 	});
 
 	describe("/fapi/v1/time - Check Server Time", () => {
-		it("should return server time", async () => {
+		it("Should match schema", async () => {
 			const response = await client.checkServerTime();
-			expect(response).toEqual(expect.schemaMatching(FuturesCheckServerTimeSchema));
+			expect(response).toEqual(expect.schemaMatching(futuresCheckServerTimeSchema));
+		});
+	});
+
+	describe("/fapi/v1/exchangeInfo - Exchange Information", () => {
+		it("Should match schema", async () => {
+			const response = await client.exchangeInformation();
+			expect(response).toEqual(expect.schemaMatching(futuresExchangeInfoSchema));
 		});
 	});
 });
