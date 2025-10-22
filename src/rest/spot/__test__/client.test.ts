@@ -1,6 +1,6 @@
 import { describe, it, beforeAll, expect } from "vitest";
 import { SpotRestClient } from "../client";
-import { spotCheckServerTimeSchema, spotTestConnectivitySchema } from "./schema";
+import { spotCheckServerTimeSchema, spotTestConnectivitySchema } from "./schema.gen";
 
 let client: SpotRestClient;
 

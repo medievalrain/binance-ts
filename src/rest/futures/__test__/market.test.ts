@@ -24,7 +24,7 @@ import {
 	futuresCompositeIndexSchema,
 	futuresAssetIndexSchema,
 	futuresIndexPriceConstituentsSchema,
-} from "./schema";
+} from "./schema.gen";
 
 let client: FuturesRestClient;
 

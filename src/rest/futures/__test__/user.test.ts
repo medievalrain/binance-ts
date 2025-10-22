@@ -12,7 +12,7 @@ import {
 	futuresPositionModeSchema,
 	futuresIncomeHistorySchema,
 	futuresGetListenKeySchema,
-} from "./schema";
+} from "./schema.gen";
 
 let client: FuturesRestClient;
 
