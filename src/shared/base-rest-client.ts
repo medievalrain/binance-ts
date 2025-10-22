@@ -74,7 +74,7 @@ export class BaseRestClient {
 		searchParams.append("signature", signature);
 		const url = new URL(endpoint, this.baseUrl);
 
-		const requestOptions: RequestInit = { keepalive: true, headers: { "X-MBX-APIKEY": this.apiKey } };
+		const requestOptions: RequestInit = { keepalive: true, headers: { "X-MBX-APIKEY": this.apiKey }, method };
 		if (method === "POST") {
 			requestOptions.body = searchParams.toString();
 		} else {
