@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import { ApiError, MalformedParamError, WeightError } from "./api-error";
 
 export type RawSearchParams = Record<string, string | undefined | null | string[] | number | boolean>;
@@ -26,12 +27,10 @@ export class BaseRestClient {
 		endpoint: string;
 		params?: RawSearchParams;
 		withApiKey?: boolean;
-	}): Promise<T> => {
+	}): Promise<NoInfer<T>> => {
 		const searchParams = this.toSearchParams(params);
 		const url = new URL(endpoint, this.baseUrl);
-		if (searchParams) {
-			url.search = searchParams;
-		}
+		url.search = searchParams.toString();
 		const requestOptions: RequestInit = { keepalive: true };
 		if (withApiKey) {
 			if (!this.apiKey) {
@@ -53,11 +52,53 @@ export class BaseRestClient {
 		throw this.parseErrorResponse(endpoint, response.status, json);
 	};
 
-	private toSearchParams(rawParams?: RawSearchParams): string {
-		if (!rawParams) {
-			return "";
+	protected async privateRequest<T extends object>({
+		endpoint,
+		params,
+		method,
+	}: {
+		endpoint: string;
+		params?: RawSearchParams;
+		method: "GET" | "POST" | "DELETE";
+	}): Promise<NoInfer<T>> {
+		if (!this.apiKey || !this.apiSecret) {
+			throw new ApiError({
+				endpoint,
+				metadata: { cause: "Empty credentials" },
+			});
 		}
+
+		const searchParams = this.toSearchParams(params);
+		searchParams.append("timestamp", new Date().getTime().toString());
+		const signature = this.sign(searchParams.toString(), this.apiSecret);
+		searchParams.append("signature", signature);
+		const url = new URL(endpoint, this.baseUrl);
+
+		const requestOptions: RequestInit = { keepalive: true, headers: { "X-MBX-APIKEY": this.apiKey } };
+		if (method === "POST") {
+			requestOptions.body = searchParams.toString();
+		} else {
+			url.search = searchParams.toString();
+		}
+		const response = await fetch(url.toString(), requestOptions);
+
+		const json = await response.json();
+		if (response.status === 200) {
+			return json as T;
+		}
+		throw this.parseErrorResponse(endpoint, response.status, json);
+	}
+
+	private sign(message: string, secret: string) {
+		return createHmac("sha256", secret).update(message).digest("hex");
+	}
+
+	private toSearchParams(rawParams?: RawSearchParams): URLSearchParams {
 		const searchParams = new URLSearchParams();
+		if (!rawParams) {
+			return searchParams;
+		}
+
 		for (const [key, value] of Object.entries(rawParams)) {
 			if (Array.isArray(value)) {
 				searchParams.append(key, JSON.stringify(value));
@@ -66,7 +107,7 @@ export class BaseRestClient {
 				searchParams.append(key, String(value));
 			}
 		}
-		return searchParams.toString();
+		return searchParams;
 	}
 
 	private parseErrorResponse(endpoint: string, statusCode: number, json: ErrorResponse): void {
