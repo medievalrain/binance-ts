@@ -19,7 +19,10 @@
 		"build": "tsdown",
 		"dev": "tsdown --watch",
 		"test": "vitest",
-		"gen:all": "NODE_OPTIONS='--localstorage-file=ls' ts-to-zod --all"
+		"gen:all": "NODE_OPTIONS='--localstorage-file=ls' ts-to-zod --all",
+		"lint": "oxlint",
+		"format": "prettier --check .",
+		"typecheck": "tsc"
 	},
 	"devDependencies": {
 		"@types/node": "24.9.1",
