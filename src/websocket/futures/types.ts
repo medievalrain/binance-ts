@@ -18,10 +18,24 @@ export type FuturesBookDepthEvent = {
 	a: [string, string][];
 };
 
+export type FuturesAggTradeEvent = {
+	e: "aggTrade";
+	E: number;
+	s: string;
+	a: number;
+	p: string;
+	q: string;
+	f: number;
+	l: number;
+	T: number;
+	m: boolean;
+};
+
 export type FuturesChannels = {
 	bookTicker: { messageSchema: FuturesBookTickerEvent; subscriptionOptions: never };
 	partialBookDepth: {
 		messageSchema: FuturesBookDepthEvent;
 		subscriptionOptions: { levels: number; updateSpeedMs?: number };
 	};
+	aggTrade: { messageSchema: FuturesAggTradeEvent; subscriptionOptions: never };
 };

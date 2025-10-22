@@ -12,6 +12,9 @@ const symbolConverter: SymbolConverter<FuturesChannels> = {
 		}
 		return `${symbol.toLowerCase()}@depth${levels}`;
 	},
+	aggTrade: (symbol: string) => {
+		return `${symbol.toLowerCase()}@aggTrade`;
+	},
 };
 
 export const createFuturesWebsocketClient = (baseUrl: string = "wss://stream.binance.com:9443/ws") => {
