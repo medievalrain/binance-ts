@@ -43,5 +43,8 @@
 		"type": "git",
 		"url": "git+https://github.com/medievalrain/binance-ts.git"
 	},
-	"packageManager": "pnpm@10.19.0"
+	"packageManager": "pnpm@10.19.0",
+	"publishConfig": {
+		"provenance": true
+	}
 }
