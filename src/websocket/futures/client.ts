@@ -1,6 +1,6 @@
 import { createWebsocketClient } from "../base";
 import type { SymbolConverter } from "../base";
-import type { FuturesChannels } from "./types";
+import type { FuturesChannels } from "./types/channels";
 
 const symbolConverter: SymbolConverter<FuturesChannels> = {
 	bookTicker: (symbol: string) => {
