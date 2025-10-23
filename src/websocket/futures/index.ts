@@ -1,2 +1,2 @@
 export { createFuturesWebsocketClient } from "./client";
-export type { FuturesBookDepthEvent, FuturesBookTickerEvent } from "./types";
+export type { FuturesBookDepthEvent, FuturesBookTickerEvent, FuturesAggTradeEvent } from "./types";
