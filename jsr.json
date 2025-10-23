@@ -1,6 +1,0 @@
-{
-	"name": "@medievalrain/binance-ts",
-	"version": "0.9.7",
-	"license": "MIT",
-	"exports": "./src/index.ts"
-}
