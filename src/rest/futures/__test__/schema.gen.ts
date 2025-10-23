@@ -364,7 +364,8 @@ export const futuresAccountConfigSchema = z.object({
     canWithdraw: z.boolean(),
     dualSidePosition: z.boolean(),
     multiAssetsMargin: z.boolean(),
-    tradeGroupId: z.number()
+    tradeGroupId: z.number(),
+    updateTime: z.number()
 });
 
 export const futuresSymbolConfigSchema = z.object({

@@ -373,6 +373,7 @@ export type FuturesAccountConfig = {
 	dualSidePosition: boolean;
 	multiAssetsMargin: boolean;
 	tradeGroupId: number;
+	updateTime: number;
 };
 
 export type FuturesSymbolConfig = {
