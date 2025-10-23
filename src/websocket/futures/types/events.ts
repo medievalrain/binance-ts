@@ -8,14 +8,9 @@ export type FuturesBookTickerEvent = {
 };
 
 export type FuturesBookDepthEvent = {
-	E: number;
-	T: number;
-	s: string;
-	U: number;
-	u: number;
-	pu: number;
-	b: [string, string][];
-	a: [string, string][];
+	lastUpdateId: number;
+	bids: [string, string][];
+	asks: [string, string][];
 };
 
 export type FuturesAggTradeEvent = {
