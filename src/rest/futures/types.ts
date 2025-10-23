@@ -100,6 +100,7 @@ export type FuturesExchangeInfoSymbol = {
 
 export type FuturesExchangeInfo = {
 	exchangeFilters: unknown[];
+	futuresType: "U_MARGINED"; // @TODO Add other options later
 	rateLimits: FuturesExchangeInfoRateLimit[];
 	serverTime: number;
 	assets: FuturesExchangeInfoAsset[];

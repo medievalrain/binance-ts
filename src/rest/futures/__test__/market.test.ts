@@ -40,28 +40,28 @@ describe("Binance Futures REST API - Public Endpoints", () => {
 	describe("/fapi/v1/ping - Test Connectivity", () => {
 		it("matches schema", async () => {
 			const res = await client.testConnectivity();
-			expect(res).toEqual(expect.schemaMatching(futuresTestConnectivitySchema));
+			expect(res).toEqual(expect.schemaMatching(futuresTestConnectivitySchema.strict()));
 		});
 	});
 
 	describe("/fapi/v1/time - Check Server Time", () => {
 		it("matches schema", async () => {
 			const res = await client.checkServerTime();
-			expect(res).toEqual(expect.schemaMatching(futuresCheckServerTimeSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresCheckServerTimeSchema.strict()));
 		});
 	});
 
 	describe("/fapi/v1/exchangeInfo - Exchange Information", () => {
 		it("matches schema", async () => {
 			const res = await client.exchangeInformation();
-			expect(res).toEqual(expect.schemaMatching(futuresExchangeInfoSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresExchangeInfoSchema.strict()));
 		});
 	});
 
 	describe("/fapi/v1/depth - Order Book", () => {
 		it("matches schema", async () => {
 			const res = await client.orderBook({ symbol: "BTCUSDT", limit: 5 });
-			expect(res).toEqual(expect.schemaMatching(futuresOrderBookSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresOrderBookSchema.strict()));
 		});
 	});
 
@@ -129,7 +129,7 @@ describe("Binance Futures REST API - Public Endpoints", () => {
 	describe("/fapi/v1/premiumIndex - Mark Price", () => {
 		it("by symbol: matches single-object schema", async () => {
 			const res = await client.markPrice({ symbol: "BTCUSDT" });
-			expect(res).toEqual(expect.schemaMatching(futuresMarkPriceSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresMarkPriceSchema.strict()));
 		});
 
 		it("all symbols: matches array schema", async () => {
@@ -160,7 +160,7 @@ describe("Binance Futures REST API - Public Endpoints", () => {
 	describe("/fapi/v1/ticker/24hr - 24h Ticker", () => {
 		it("by symbol: matches single-object schema", async () => {
 			const res = await client.ticker24h({ symbol: "BTCUSDT" });
-			expect(res).toEqual(expect.schemaMatching(futuresTicker24hSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresTicker24hSchema.strict()));
 		});
 
 		it("all symbols: matches array schema", async () => {
@@ -172,7 +172,7 @@ describe("Binance Futures REST API - Public Endpoints", () => {
 	describe("/fapi/v2/ticker/price - Symbol Price Ticker", () => {
 		it("by symbol: matches single-object schema", async () => {
 			const res = await client.symbolPriceTicker({ symbol: "BTCUSDT" });
-			expect(res).toEqual(expect.schemaMatching(futuresSymbolPriceSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresSymbolPriceSchema.strict()));
 		});
 
 		it("all symbols: matches array schema", async () => {
@@ -184,7 +184,7 @@ describe("Binance Futures REST API - Public Endpoints", () => {
 	describe("/fapi/v1/ticker/bookTicker - Book Ticker", () => {
 		it("by symbol: matches single-object schema", async () => {
 			const res = await client.bookTicker({ symbol: "BTCUSDT" });
-			expect(res).toEqual(expect.schemaMatching(futuresBookTickerSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresBookTickerSchema.strict()));
 		});
 
 		it("all symbols: matches array schema", async () => {
@@ -203,7 +203,7 @@ describe("Binance Futures REST API - Public Endpoints", () => {
 	describe("/fapi/v1/openInterest - Open Interest", () => {
 		it("matches schema", async () => {
 			const res = await client.openInterest({ symbol: "BTCUSDT" });
-			expect(res).toEqual(expect.schemaMatching(futuresOpenInterestSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresOpenInterestSchema.strict()));
 		});
 	});
 
@@ -257,7 +257,7 @@ describe("Binance Futures REST API - Public Endpoints", () => {
 	describe("/fapi/v1/indexInfo - Composite Index Info", () => {
 		it("by symbol: matches single-object schema", async () => {
 			const res = await client.compositeIndexInfo({ symbol: "BTCDOMUSDT" });
-			expect(res).toEqual(expect.schemaMatching(futuresCompositeIndexSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresCompositeIndexSchema.strict()));
 		});
 
 		it("all symbols: matches array schema", async () => {
@@ -269,7 +269,7 @@ describe("Binance Futures REST API - Public Endpoints", () => {
 	describe("/fapi/v1/assetIndex - Asset Index", () => {
 		it("by symbol: matches single-object schema", async () => {
 			const res = await client.assetIndex({ symbol: "BTCUSD" });
-			expect(res).toEqual(expect.schemaMatching(futuresAssetIndexSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresAssetIndexSchema.strict()));
 		});
 
 		it("all symbols: matches array schema", async () => {
@@ -281,7 +281,7 @@ describe("Binance Futures REST API - Public Endpoints", () => {
 	describe("/fapi/v1/constituents - Index Price Constituents", () => {
 		it("matches schema", async () => {
 			const res = await client.indexPriceConstituents({ symbol: "BTCUSDT" });
-			expect(res).toEqual(expect.schemaMatching(futuresIndexPriceConstituentsSchema));
+			expect(res).toEqual(expect.schemaMatching(futuresIndexPriceConstituentsSchema.strict()));
 		});
 	});
 });

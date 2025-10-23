@@ -92,6 +92,7 @@ export const futuresExchangeInfoSymbolSchema = z.object({
 
 export const futuresExchangeInfoSchema = z.object({
     exchangeFilters: z.array(z.unknown()),
+    futuresType: z.literal("U_MARGINED"),
     rateLimits: z.array(futuresExchangeInfoRateLimitSchema),
     serverTime: z.number(),
     assets: z.array(futuresExchangeInfoAssetSchema),
