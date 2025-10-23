@@ -46,7 +46,6 @@ describe("Binance Futures WebSocket API - Market events", () => {
 			const fn = vi.fn();
 			client.partialBookDepth.on((event) => {
 				fn();
-				console.log(event);
 				expect(event).toEqual(expect.schemaMatching(futuresBookDepthEventSchema));
 			});
 			await vi.waitFor(() => {
