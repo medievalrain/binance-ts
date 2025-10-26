@@ -31,9 +31,9 @@
 		"oxlint": "1.24.0",
 		"prettier": "3.6.2",
 		"ts-to-zod": "5.0.1",
-		"tsdown": "0.15.9",
+		"tsdown": "0.15.10",
 		"typescript": "5.9.3",
-		"vitest": "4.0.1",
+		"vitest": "4.0.3",
 		"zod": "4.1.12"
 	},
 	"dependencies": {
