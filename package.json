@@ -33,11 +33,11 @@
 		"ts-to-zod": "5.0.1",
 		"tsdown": "0.15.10",
 		"typescript": "5.9.3",
-		"vitest": "4.0.3",
+		"vitest": "4.0.4",
 		"zod": "4.1.12"
 	},
 	"dependencies": {
-		"@medievalrain/emitter": "0.2.21"
+		"@medievalrain/emitter": "0.6.0"
 	},
 	"repository": {
 		"type": "git",
