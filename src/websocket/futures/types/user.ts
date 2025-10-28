@@ -1,4 +1,3 @@
-import type { SnakeToCamel } from "@/shared/types";
 import type { CallbackOptions } from "@medievalrain/emitter";
 
 export type BaseFuturesEvent = {
