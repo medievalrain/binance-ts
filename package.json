@@ -31,13 +31,13 @@
 		"oxlint": "1.24.0",
 		"prettier": "3.6.2",
 		"ts-to-zod": "5.0.1",
-		"tsdown": "0.15.10",
+		"tsdown": "0.15.11",
 		"typescript": "5.9.3",
 		"vitest": "4.0.4",
 		"zod": "4.1.12"
 	},
 	"dependencies": {
-		"@medievalrain/emitter": "0.6.0"
+		"@medievalrain/emitter": "0.8.0"
 	},
 	"repository": {
 		"type": "git",
