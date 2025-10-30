@@ -46,7 +46,7 @@ export class BaseRestClient {
 	}: {
 		endpoint: string;
 		params?: RawSearchParams;
-		method: "GET" | "POST" | "DELETE";
+		method: "GET" | "POST" | "DELETE" | "PUT";
 	}): Promise<NoInfer<T>> {
 		if (!this.apiKey || !this.apiSecret) {
 			throw new ApiError({

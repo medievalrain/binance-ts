@@ -46,6 +46,8 @@ import type {
 	FuturesTimeInForce,
 	FuturesGetListenKey,
 	FuturesNewOrder,
+	FuturesModifyOrder,
+	FuturesCancelOrder,
 } from "./types";
 
 export class FuturesRestClient extends BaseRestClient {
@@ -468,6 +470,36 @@ export class FuturesRestClient extends BaseRestClient {
 		return this.privateRequest<FuturesGetListenKey>({
 			method: "POST",
 			endpoint: "/fapi/v1/listenKey",
+		});
+	}
+
+	public async modifyOrder(params: {
+		orderId?: number;
+		origClientOrderId?: string;
+		symbol: string;
+		side: FuturesOrderSide;
+		quantity: number;
+		price: number;
+		priceMatch?: FuturesPriceMatch;
+		recvWindow?: number;
+	}): Promise<FuturesModifyOrder> {
+		return this.privateRequest<FuturesModifyOrder>({
+			method: "PUT",
+			endpoint: "/fapi/v1/order",
+			params,
+		});
+	}
+
+	public async cancelOrder(params: {
+		orderId?: number;
+		origClientOrderId?: string;
+		symbol: string;
+		recvWindow?: number;
+	}): Promise<FuturesCancelOrder> {
+		return this.privateRequest<FuturesCancelOrder>({
+			method: "DELETE",
+			endpoint: "/fapi/v1/order",
+			params,
 		});
 	}
 }

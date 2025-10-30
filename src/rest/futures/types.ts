@@ -1,3 +1,5 @@
+import type { FuturesOrderStatus } from "@/websocket/futures/types/user";
+
 export type FuturesTestConnectivity = {};
 export type FuturesCheckServerTime = { serverTime: number };
 
@@ -494,4 +496,60 @@ export type FuturesNewOrder = {
 
 export type FuturesGetListenKey = {
 	listenKey: string;
+};
+
+export type FuturesModifyOrder = {
+	orderId: number;
+	symbol: string;
+	pair: string;
+	status: FuturesOrderStatus;
+	clientOrderId: string;
+	price: string;
+	avgPrice: string;
+	origQty: string;
+	executedQty: string;
+	cumQty: string;
+	cumBase: string;
+	timeInForce: FuturesTimeInForce;
+	type: FuturesOrderType;
+	reduceOnly: boolean;
+	closePosition: boolean;
+	side: FuturesOrderSide;
+	positionSide: FuturesPositionSide;
+	stopPrice: string;
+	workingType: FuturesWorkingType;
+	priceProtect: boolean;
+	origType: FuturesOrderType;
+	priceMatch: FuturesPriceMatch;
+	selfTradePreventionMode: FuturesSelfTradePrevention;
+	goodTillDate: number;
+	updateTime: number;
+};
+
+export type FuturesCancelOrder = {
+	clientOrderId: string;
+	cumQty: string;
+	cumQuote: string;
+	executedQty: string;
+	orderId: number;
+	origQty: string;
+	origType: FuturesOrderType;
+	price: string;
+	reduceOnly: boolean;
+	side: FuturesOrderSide;
+	positionSide: FuturesPositionSide;
+	status: FuturesOrderStatus;
+	stopPrice: string;
+	closePosition: boolean;
+	symbol: string;
+	timeInForce: FuturesTimeInForce;
+	type: FuturesOrderType;
+	activatePrice?: string;
+	priceRate?: string;
+	updateTime: number;
+	workingType: FuturesWorkingType;
+	priceProtect: boolean;
+	priceMatch: FuturesPriceMatch;
+	selfTradePreventionMode: FuturesSelfTradePrevention;
+	goodTillDate: number;
 };
