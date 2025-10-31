@@ -17,6 +17,6 @@ const symbolConverter: SymbolConverter<FuturesChannels> = {
 	},
 };
 
-export const createFuturesWebsocketClient = (baseUrl: string = "wss://stream.binance.com:9443/ws") => {
+export const createFuturesWebsocketClient = (baseUrl: string = "wss://fstream.binance.com/ws") => {
 	return createWebsocketClient<FuturesChannels>(baseUrl, symbolConverter);
 };
