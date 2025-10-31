@@ -461,3 +461,61 @@ export const futuresNewOrderSchema = z.object({
 export const futuresGetListenKeySchema = z.object({
     listenKey: z.string()
 });
+
+export const futuresOrderStatusSchema = z.union([z.literal("NEW"), z.literal("PARTIALLY_FILLED"), z.literal("FILLED"), z.literal("CANCELED"), z.literal("EXPIRED"), z.literal("EXPIRED_IN_MATCH")]);
+
+export const futuresModifyOrderSchema = z.object({
+    orderId: z.number(),
+    symbol: z.string(),
+    pair: z.string(),
+    status: futuresOrderStatusSchema.optional(),
+    clientOrderId: z.string(),
+    price: z.string(),
+    avgPrice: z.string(),
+    origQty: z.string(),
+    executedQty: z.string(),
+    cumQty: z.string(),
+    cumBase: z.string(),
+    timeInForce: futuresTimeInForceSchema,
+    type: futuresOrderTypeSchema,
+    reduceOnly: z.boolean(),
+    closePosition: z.boolean(),
+    side: futuresOrderSideSchema,
+    positionSide: futuresPositionSideSchema,
+    stopPrice: z.string(),
+    workingType: futuresWorkingTypeSchema,
+    priceProtect: z.boolean(),
+    origType: futuresOrderTypeSchema,
+    priceMatch: futuresPriceMatchSchema,
+    selfTradePreventionMode: futuresSelfTradePreventionSchema,
+    goodTillDate: z.number(),
+    updateTime: z.number()
+});
+
+export const futuresCancelOrderSchema = z.object({
+    clientOrderId: z.string(),
+    cumQty: z.string(),
+    cumQuote: z.string(),
+    executedQty: z.string(),
+    orderId: z.number(),
+    origQty: z.string(),
+    origType: futuresOrderTypeSchema,
+    price: z.string(),
+    reduceOnly: z.boolean(),
+    side: futuresOrderSideSchema,
+    positionSide: futuresPositionSideSchema,
+    status: futuresOrderStatusSchema,
+    stopPrice: z.string(),
+    closePosition: z.boolean(),
+    symbol: z.string(),
+    timeInForce: futuresTimeInForceSchema,
+    type: futuresOrderTypeSchema,
+    activatePrice: z.string().optional(),
+    priceRate: z.string().optional(),
+    updateTime: z.number(),
+    workingType: futuresWorkingTypeSchema,
+    priceProtect: z.boolean(),
+    priceMatch: futuresPriceMatchSchema,
+    selfTradePreventionMode: futuresSelfTradePreventionSchema,
+    goodTillDate: z.number()
+});

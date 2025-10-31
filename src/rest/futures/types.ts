@@ -1,5 +1,3 @@
-import type { FuturesOrderStatus } from "@/websocket/futures/types/user";
-
 export type FuturesTestConnectivity = {};
 export type FuturesCheckServerTime = { serverTime: number };
 
@@ -498,11 +496,13 @@ export type FuturesGetListenKey = {
 	listenKey: string;
 };
 
+export type FuturesOrderStatus = "NEW" | "PARTIALLY_FILLED" | "FILLED" | "CANCELED" | "EXPIRED" | "EXPIRED_IN_MATCH";
+
 export type FuturesModifyOrder = {
 	orderId: number;
 	symbol: string;
 	pair: string;
-	status: FuturesOrderStatus;
+	status?: FuturesOrderStatus;
 	clientOrderId: string;
 	price: string;
 	avgPrice: string;
