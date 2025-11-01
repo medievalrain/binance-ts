@@ -553,3 +553,9 @@ export type FuturesCancelOrder = {
 	selfTradePreventionMode: FuturesSelfTradePrevention;
 	goodTillDate: number;
 };
+
+export type FuturesChangeInitialLeverage = {
+	leverage: number;
+	maxNotionalValue: string;
+	symbol: string;
+};

@@ -48,6 +48,7 @@ import type {
 	FuturesNewOrder,
 	FuturesModifyOrder,
 	FuturesCancelOrder,
+	FuturesChangeInitialLeverage,
 } from "./types";
 
 export class FuturesRestClient extends BaseRestClient {
@@ -499,6 +500,18 @@ export class FuturesRestClient extends BaseRestClient {
 		return this.privateRequest<FuturesCancelOrder>({
 			method: "DELETE",
 			endpoint: "/fapi/v1/order",
+			params,
+		});
+	}
+
+	public async changeInitialLeverage(params: {
+		symbol: string;
+		leverage: number;
+		recvWindow?: number;
+	}): Promise<FuturesChangeInitialLeverage> {
+		return this.privateRequest<FuturesChangeInitialLeverage>({
+			method: "POST",
+			endpoint: "/fapi/v1/leverage",
 			params,
 		});
 	}
