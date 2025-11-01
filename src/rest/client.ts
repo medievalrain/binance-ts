@@ -1,16 +1,17 @@
-import type { ApiCredentials } from "@/shared/types";
 import { FuturesRestClient } from "./futures/client";
 import { SpotRestClient } from "./spot/client";
-
-interface RestClientOptions extends ApiCredentials {
-	baseUrls?: { spot?: string; futures?: string };
-}
 
 class BinanceRestClient {
 	private _futures?: FuturesRestClient;
 	private _spot?: SpotRestClient;
 
-	constructor(private options?: RestClientOptions) {}
+	constructor(
+		private options?: {
+			apiKey?: string;
+			apiSecret?: string;
+			baseUrls?: { spot?: string; futures?: string };
+		}
+	) {}
 
 	get futures(): FuturesRestClient {
 		if (!this._futures) {
@@ -32,6 +33,10 @@ class BinanceRestClient {
 		return this._spot;
 	}
 }
-export const createBinanceRestClient = (options?: RestClientOptions) => {
+export const createBinanceRestClient = (options?: {
+	apiKey?: string;
+	apiSecret?: string;
+	baseUrls?: { spot?: string; futures?: string };
+}) => {
 	return new BinanceRestClient(options);
 };
