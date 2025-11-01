@@ -1,7 +1,7 @@
 import { FuturesRestClient } from "./futures/client";
 import { SpotRestClient } from "./spot/client";
 
-class BinanceRestClient {
+export class BinanceRestClient {
 	private _futures?: FuturesRestClient;
 	private _spot?: SpotRestClient;
 
@@ -37,6 +37,6 @@ export const createBinanceRestClient = (options?: {
 	apiKey?: string;
 	apiSecret?: string;
 	baseUrls?: { spot?: string; futures?: string };
-}) => {
+}): BinanceRestClient => {
 	return new BinanceRestClient(options);
 };
