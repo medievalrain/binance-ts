@@ -2,10 +2,6 @@
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"plugins": ["import", "typescript", "unicorn", "oxc", "jsx-a11y", "node", "promise", "vitest"],
 	"rules": {
-		"import/consistent-type-specifier-style": "error",
-		"vitest/valid-describe-callback": "off",
-		"vitest/no-conditional-tests": "off",
-		"vitest/no-disabled-tests": "off",
-		"vitest/no-standalone-expect": "off"
+		"import/consistent-type-specifier-style": "error"
 	}
 }
