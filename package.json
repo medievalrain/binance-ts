@@ -1,6 +1,6 @@
 {
 	"name": "@medievalrain/binance-ts",
-	"version": "0.14.4",
+	"version": "0.14.5",
 	"description": "Binance API SDK",
 	"access": "public",
 	"type": "module",
@@ -30,9 +30,9 @@
 		"oxlint": "1.28.0",
 		"prettier": "3.6.2",
 		"ts-to-zod": "5.0.1",
-		"tsdown": "0.16.3",
+		"tsdown": "0.16.4",
 		"typescript": "5.9.3",
-		"vitest": "4.0.8",
+		"vitest": "4.0.9",
 		"zod": "4.1.12"
 	},
 	"dependencies": {
