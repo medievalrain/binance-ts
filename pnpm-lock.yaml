@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@medievalrain/emitter':
-        specifier: 0.8.4
-        version: 0.8.4
+        specifier: 0.8.5
+        version: 0.8.5
     devDependencies:
       '@types/node':
         specifier: 24.10.1
@@ -247,8 +247,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@medievalrain/emitter@0.8.4':
-    resolution: {integrity: sha512-jS6xJsWtpEh+vuvkTCX+Qf8h2w8myWX7m3ZG36KsbuyuY7aIRpwXdx0EeZ2ifEeon/TJxwPf2Ew/U7pUyp08dQ==}
+  '@medievalrain/emitter@0.8.5':
+    resolution: {integrity: sha512-a7l1vGQVL7o3mh+mzPr0hvl31o3WzVKfsfcAT0lPpmnp88OIqP6KH7o7wi92Mr5dQeMH3N4eQmqh7zfP5Rz/oA==}
 
   '@napi-rs/wasm-runtime@1.0.7':
     resolution: {integrity: sha512-SeDnOO0Tk7Okiq6DbXmmBODgOAb9dp9gjlphokTUxmt8U3liIP1ZsozBahH69j/RJv+Rfs6IwUKHTgQYJ/HBAw==}
@@ -1349,7 +1349,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@medievalrain/emitter@0.8.4': {}
+  '@medievalrain/emitter@0.8.5': {}
 
   '@napi-rs/wasm-runtime@1.0.7':
     dependencies:
