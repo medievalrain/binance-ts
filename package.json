@@ -1,6 +1,6 @@
 {
 	"name": "@medievalrain/binance-ts",
-	"version": "0.14.8",
+	"version": "0.14.9",
 	"description": "Binance API SDK",
 	"access": "public",
 	"type": "module",
@@ -36,7 +36,7 @@
 		"zod": "4.1.13"
 	},
 	"dependencies": {
-		"@medievalrain/emitter": "0.8.5"
+		"@medievalrain/emitter": "0.8.6"
 	},
 	"repository": {
 		"type": "git",
