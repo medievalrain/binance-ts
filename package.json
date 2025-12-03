@@ -1,6 +1,6 @@
 {
 	"name": "@medievalrain/binance-ts",
-	"version": "0.14.9",
+	"version": "0.14.10",
 	"description": "Binance API SDK",
 	"access": "public",
 	"type": "module",
@@ -27,22 +27,22 @@
 	"devDependencies": {
 		"@types/node": "24.10.1",
 		"dotenv": "17.2.3",
-		"oxlint": "1.30.0",
-		"prettier": "3.6.2",
+		"oxlint": "1.31.0",
+		"prettier": "3.7.4",
 		"ts-to-zod": "5.1.0",
-		"tsdown": "0.16.7",
+		"tsdown": "0.16.8",
 		"typescript": "5.9.3",
-		"vitest": "4.0.14",
+		"vitest": "4.0.15",
 		"zod": "4.1.13"
 	},
 	"dependencies": {
-		"@medievalrain/emitter": "0.8.6"
+		"@medievalrain/emitter": "0.8.7"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/medievalrain/binance-ts.git"
 	},
-	"packageManager": "pnpm@10.23.0",
+	"packageManager": "pnpm@10.24.0",
 	"publishConfig": {
 		"access": "public",
 		"provenance": true
