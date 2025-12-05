@@ -1,2 +1,2 @@
 export { createWebsocketClient } from "./client";
-export type { SymbolConverter } from "./types";
+export type { SymbolConverter, WebsocketClient } from "./types";
