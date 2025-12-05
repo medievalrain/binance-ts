@@ -363,6 +363,7 @@ export type FuturesCommissionRate = {
 	symbol: string;
 	makerCommissionRate: string;
 	takerCommissionRate: string;
+	rpiCommissionRate: string;
 };
 
 export type FuturesAccountConfig = {

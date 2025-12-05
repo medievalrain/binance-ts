@@ -354,7 +354,8 @@ export const futuresAccountInfoSchema = z.object({
 export const futuresCommissionRateSchema = z.object({
     symbol: z.string(),
     makerCommissionRate: z.string(),
-    takerCommissionRate: z.string()
+    takerCommissionRate: z.string(),
+    rpiCommissionRate: z.string()
 });
 
 export const futuresAccountConfigSchema = z.object({
@@ -518,4 +519,10 @@ export const futuresCancelOrderSchema = z.object({
     priceMatch: futuresPriceMatchSchema,
     selfTradePreventionMode: futuresSelfTradePreventionSchema,
     goodTillDate: z.number()
+});
+
+export const futuresChangeInitialLeverageSchema = z.object({
+    leverage: z.number(),
+    maxNotionalValue: z.string(),
+    symbol: z.string()
 });
