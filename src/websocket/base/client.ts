@@ -1,224 +1,235 @@
 import type {
-	ChannelsMap,
-	ConnectionEvent,
-	OptArgs,
-	Section,
-	SubscriptionState,
-	SymbolConverter,
-	WebsocketClient,
-	WebsocketClientEventMap,
+  ChannelsMap,
+  ConnectionEvent,
+  OptArgs,
+  Section,
+  SubscriptionState,
+  SymbolConverter,
+  WebsocketClient,
+  WebsocketClientEventMap,
 } from "./types";
 import { createEmitter } from "@medievalrain/emitter";
 
 const makeSection = <MarketEvent extends object>(baseUrl: string): Section<MarketEvent> => {
-	let socket = new WebSocket(baseUrl);
-	let connectionController = new AbortController();
+  let socket = new WebSocket(baseUrl);
+  let connectionController = new AbortController();
 
-	const subscriptions = new Map<string, SubscriptionState>();
-	const emitter = createEmitter<WebsocketClientEventMap<MarketEvent>>();
-	let connectionId = 1;
+  const subscriptions = new Map<string, SubscriptionState>();
+  const emitter = createEmitter<WebsocketClientEventMap<MarketEvent>>();
+  let connectionId = 1;
 
-	const parseMessageEvent = (e: MessageEvent) => {
-		if (typeof e.data !== "string") {
-			emitter.emit("error", new Error("Message event is not a string", { cause: e.data }));
-			return;
-		}
-		const data = JSON.parse(e.data) as ConnectionEvent | MarketEvent;
+  const parseMessageEvent = (e: MessageEvent) => {
+    if (typeof e.data !== "string") {
+      emitter.emit("error", new Error("Message event is not a string", { cause: e.data }));
+      return;
+    }
+    const data = JSON.parse(e.data) as ConnectionEvent | MarketEvent;
 
-		if ("id" in data) {
-			emitter.emit("connectionMessage", data);
-		} else {
-			emitter.emit("marketMessage", data);
-		}
-	};
+    if ("id" in data) {
+      emitter.emit("connectionMessage", data);
+    } else {
+      emitter.emit("marketMessage", data);
+    }
+  };
 
-	socket.addEventListener("message", parseMessageEvent, { signal: connectionController.signal });
+  socket.addEventListener("message", parseMessageEvent, { signal: connectionController.signal });
 
-	const sendMessage = <T extends object>(data: T) => socket.send(JSON.stringify(data));
+  const sendMessage = <T extends object>(data: T) => socket.send(JSON.stringify(data));
 
-	const connect = async () => {
-		return new Promise<void>((resolve) => {
-			if (socket.readyState === WebSocket.OPEN) {
-				return resolve();
-			}
+  const connect = async () => {
+    return new Promise<void>((resolve) => {
+      if (socket.readyState === WebSocket.OPEN) {
+        return resolve();
+      }
 
-			if (socket.readyState === WebSocket.CLOSED) {
-				connectionController.abort();
-				socket = new WebSocket(baseUrl);
-				connectionController = new AbortController();
-				socket.addEventListener("message", parseMessageEvent, { signal: connectionController.signal });
-				connectionId = 1;
-				const toSubscribe = Array.from(subscriptions.entries())
-					.filter(([_, state]) => state !== "PENDING_UNSUBSCRIPTION")
-					.map(([key]) => key);
+      if (socket.readyState === WebSocket.CLOSED) {
+        connectionController.abort();
+        socket = new WebSocket(baseUrl);
+        connectionController = new AbortController();
+        socket.addEventListener("message", parseMessageEvent, {
+          signal: connectionController.signal,
+        });
+        connectionId = 1;
+        const toSubscribe = Array.from(subscriptions.entries())
+          .filter(([_, state]) => state !== "PENDING_UNSUBSCRIPTION")
+          .map(([key]) => key);
 
-				return subscribe(toSubscribe);
-			}
+        return subscribe(toSubscribe);
+      }
 
-			if (socket.readyState === WebSocket.CONNECTING) {
-				socket.addEventListener("open", () => resolve(), { once: true });
-			}
-			if (socket.readyState === WebSocket.CLOSING) {
-				socket.addEventListener(
-					"close",
-					async () => {
-						await connect();
-						resolve();
-					},
-					{ once: true }
-				);
-			}
-		});
-	};
+      if (socket.readyState === WebSocket.CONNECTING) {
+        socket.addEventListener("open", () => resolve(), { once: true });
+      }
+      if (socket.readyState === WebSocket.CLOSING) {
+        socket.addEventListener(
+          "close",
+          async () => {
+            await connect();
+            resolve();
+          },
+          { once: true },
+        );
+      }
+    });
+  };
 
-	const subscribe = async (symbols: string[]) => {
-		await connect();
-		const toSubscribe: string[] = [];
-		const delayed: string[] = [];
-		connectionId += 1;
-		const currentId = connectionId;
-		symbols.forEach((symbol) => {
-			const existing = subscriptions.get(symbol);
-			if (!existing) {
-				toSubscribe.push(symbol);
-				subscriptions.set(symbol, "PENDING_SUBSCRIPTION");
-				return;
-			}
-			if (existing === "SUBSCRIBED") {
-				return;
-			}
-			delayed.push(symbol);
-		});
+  const subscribe = async (symbols: string[]) => {
+    await connect();
+    const toSubscribe: string[] = [];
+    const delayed: string[] = [];
+    connectionId += 1;
+    const currentId = connectionId;
+    symbols.forEach((symbol) => {
+      const existing = subscriptions.get(symbol);
+      if (!existing) {
+        toSubscribe.push(symbol);
+        subscriptions.set(symbol, "PENDING_SUBSCRIPTION");
+        return;
+      }
+      if (existing === "SUBSCRIBED") {
+        return;
+      }
+      delayed.push(symbol);
+    });
 
-		sendMessage({
-			method: "SUBSCRIBE",
-			params: toSubscribe,
-			id: currentId,
-		});
+    sendMessage({
+      method: "SUBSCRIBE",
+      params: toSubscribe,
+      id: currentId,
+    });
 
-		const waitForSub = new Promise<void>((resolve, reject) => {
-			const controller = new AbortController();
-			const timeout = setTimeout(() => reject(), 10000);
-			const handleSubscription = (data: ConnectionEvent) => {
-				if (data.id !== currentId) {
-					return;
-				}
-				controller.abort();
-				clearTimeout(timeout);
-				if ("error" in data) {
-					return reject();
-				} else {
-					toSubscribe.forEach((symbol) => subscriptions.set(symbol, "SUBSCRIBED"));
+    const waitForSub = new Promise<void>((resolve, reject) => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => reject(), 10000);
+      const handleSubscription = (data: ConnectionEvent) => {
+        if (data.id !== currentId) {
+          return;
+        }
+        controller.abort();
+        clearTimeout(timeout);
+        if ("error" in data) {
+          return reject();
+        } else {
+          toSubscribe.forEach((symbol) => subscriptions.set(symbol, "SUBSCRIBED"));
 
-					return resolve();
-				}
-			};
-			emitter.on("connectionMessage", handleSubscription, { signal: controller.signal });
-		});
+          return resolve();
+        }
+      };
+      emitter.on("connectionMessage", handleSubscription, { signal: controller.signal });
+    });
 
-		await waitForSub;
+    await waitForSub;
 
-		if (delayed.length) {
-			return subscribe(delayed);
-		}
-	};
-	const unsubscribe = async (symbols: string[]) => {
-		await connect();
+    if (delayed.length) {
+      return subscribe(delayed);
+    }
+  };
+  const unsubscribe = async (symbols: string[]) => {
+    await connect();
 
-		const toUnsubscribe: string[] = [];
-		const delayed: string[] = [];
-		connectionId += 1;
-		const currentId = connectionId;
-		symbols.forEach((symbol) => {
-			const existing = subscriptions.get(symbol);
-			if (existing === "SUBSCRIBED") {
-				toUnsubscribe.push(symbol);
-				subscriptions.set(symbol, "PENDING_UNSUBSCRIPTION");
-				return;
-			}
+    const toUnsubscribe: string[] = [];
+    const delayed: string[] = [];
+    connectionId += 1;
+    const currentId = connectionId;
+    symbols.forEach((symbol) => {
+      const existing = subscriptions.get(symbol);
+      if (existing === "SUBSCRIBED") {
+        toUnsubscribe.push(symbol);
+        subscriptions.set(symbol, "PENDING_UNSUBSCRIPTION");
+        return;
+      }
 
-			delayed.push(symbol);
-		});
-		sendMessage({
-			method: "UNSUBSCRIBE",
-			params: toUnsubscribe,
-			id: currentId,
-		});
+      delayed.push(symbol);
+    });
+    sendMessage({
+      method: "UNSUBSCRIBE",
+      params: toUnsubscribe,
+      id: currentId,
+    });
 
-		const waitForUnsub = new Promise<void>((resolve, reject) => {
-			const controller = new AbortController();
-			const timeout = setTimeout(() => reject(), 10000);
-			const handleSubscription = (data: ConnectionEvent) => {
-				if (data.id !== currentId) {
-					return;
-				}
-				controller.abort();
-				clearTimeout(timeout);
-				if ("error" in data) {
-					return reject();
-				} else {
-					toUnsubscribe.forEach((symbol) => subscriptions.delete(symbol));
+    const waitForUnsub = new Promise<void>((resolve, reject) => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => reject(), 10000);
+      const handleSubscription = (data: ConnectionEvent) => {
+        if (data.id !== currentId) {
+          return;
+        }
+        controller.abort();
+        clearTimeout(timeout);
+        if ("error" in data) {
+          return reject();
+        } else {
+          toUnsubscribe.forEach((symbol) => subscriptions.delete(symbol));
 
-					return resolve();
-				}
-			};
-			emitter.on("connectionMessage", handleSubscription, { signal: controller.signal });
-		});
+          return resolve();
+        }
+      };
+      emitter.on("connectionMessage", handleSubscription, { signal: controller.signal });
+    });
 
-		await waitForUnsub;
+    await waitForUnsub;
 
-		if (delayed.length) {
-			return unsubscribe(delayed);
-		}
-	};
+    if (delayed.length) {
+      return unsubscribe(delayed);
+    }
+  };
 
-	const onMarketEvent = (callback: (data: MarketEvent) => void, options?: AddEventListenerOptions) => {
-		emitter.on("marketMessage", callback, options);
-	};
-	const offMarketEvent = (callback: (data: MarketEvent) => void, options?: AddEventListenerOptions) => {
-		emitter.on("marketMessage", callback, options);
-	};
+  const onMarketEvent = (
+    callback: (data: MarketEvent) => void,
+    options?: AddEventListenerOptions,
+  ) => {
+    emitter.on("marketMessage", callback, options);
+  };
+  const offMarketEvent = (
+    callback: (data: MarketEvent) => void,
+    options?: AddEventListenerOptions,
+  ) => {
+    emitter.on("marketMessage", callback, options);
+  };
 
-	return {
-		socket,
-		subscriptions,
-		connectionId,
-		on: onMarketEvent,
-		off: offMarketEvent,
-		subscribe,
-		unsubscribe,
-	};
+  return {
+    socket,
+    subscriptions,
+    connectionId,
+    on: onMarketEvent,
+    off: offMarketEvent,
+    subscribe,
+    unsubscribe,
+  };
 };
 
-export const createWebsocketClient = <CM extends ChannelsMap>(baseUrl: string, symbolConverter: SymbolConverter<CM>) => {
-	const sections = new Map<keyof CM, Section<CM[keyof CM]["messageSchema"]>>();
+export const createWebsocketClient = <CM extends ChannelsMap>(
+  baseUrl: string,
+  symbolConverter: SymbolConverter<CM>,
+) => {
+  const sections = new Map<keyof CM, Section<CM[keyof CM]["messageSchema"]>>();
 
-	const getSection = (channel: keyof CM) => {
-		const existingSection = sections.get(channel);
-		if (existingSection) {
-			return existingSection;
-		}
-		const section = makeSection(baseUrl);
-		sections.set(channel, section);
-		return section;
-	};
+  const getSection = (channel: keyof CM) => {
+    const existingSection = sections.get(channel);
+    if (existingSection) {
+      return existingSection;
+    }
+    const section = makeSection(baseUrl);
+    sections.set(channel, section);
+    return section;
+  };
 
-	const handler: ProxyHandler<{}> = {
-		get(_target, channel: keyof CM & string) {
-			const section = getSection(channel);
-			const converter = symbolConverter[channel];
+  const handler: ProxyHandler<{}> = {
+    get(_target, channel: keyof CM & string) {
+      const section = getSection(channel);
+      const converter = symbolConverter[channel];
 
-			return Object.freeze({
-				subscribe: (symbols: string[], ...args: OptArgs<CM, typeof channel>) => {
-					return section.subscribe(symbols.map((s) => converter(s, ...args)));
-				},
-				unsubscribe: (symbols: string[], ...args: OptArgs<CM, typeof channel>) => {
-					return section.unsubscribe(symbols.map((s) => converter(s, ...args)));
-				},
-				on: section.on,
-				off: section.off,
-			});
-		},
-	};
-	return new Proxy({}, handler) as WebsocketClient<CM>;
+      return Object.freeze({
+        subscribe: (symbols: string[], ...args: OptArgs<CM, typeof channel>) => {
+          return section.subscribe(symbols.map((s) => converter(s, ...args)));
+        },
+        unsubscribe: (symbols: string[], ...args: OptArgs<CM, typeof channel>) => {
+          return section.unsubscribe(symbols.map((s) => converter(s, ...args)));
+        },
+        on: section.on,
+        off: section.off,
+      });
+    },
+  };
+  return new Proxy({}, handler) as WebsocketClient<CM>;
 };

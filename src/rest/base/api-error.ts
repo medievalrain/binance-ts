@@ -1,79 +1,79 @@
 export class ApiError extends Error {
-	public endpoint: string;
+  public endpoint: string;
 
-	constructor({ endpoint, metadata }: { endpoint: string; metadata: Record<string, unknown> }) {
-		super(JSON.stringify({ endpoint, ...metadata }, null, 2));
-		this.endpoint = endpoint;
-	}
+  constructor({ endpoint, metadata }: { endpoint: string; metadata: Record<string, unknown> }) {
+    super(JSON.stringify({ endpoint, ...metadata }, null, 2));
+    this.endpoint = endpoint;
+  }
 }
 
 export class ResponseError extends ApiError {
-	public code: number;
-	public status: number;
+  public code: number;
+  public status: number;
 
-	constructor({
-		metadata,
-		code,
-		status,
-		endpoint,
-	}: {
-		metadata?: Record<string, unknown>;
-		endpoint: string;
-		code: number;
-		status: number;
-	}) {
-		super({ endpoint, metadata: { ...metadata, code, status } });
-		this.code = code;
-		this.status = status;
-	}
+  constructor({
+    metadata,
+    code,
+    status,
+    endpoint,
+  }: {
+    metadata?: Record<string, unknown>;
+    endpoint: string;
+    code: number;
+    status: number;
+  }) {
+    super({ endpoint, metadata: { ...metadata, code, status } });
+    this.code = code;
+    this.status = status;
+  }
 }
 
 export class ErrorMessageParsingError extends Error {
-	constructor(message: string) {
-		super(message);
-	}
+  constructor(message: string) {
+    super(message);
+  }
 }
 
 export class WeightError extends ResponseError {
-	public ip: string;
-	public bannedUntil: number;
+  public ip: string;
+  public bannedUntil: number;
 
-	constructor({ message, endpoint }: { message: string; endpoint: string }) {
-		super({ endpoint, code: -1003, status: 418 });
-		const { ip, timestamp } = this.parseWeightResponse(message);
-		this.ip = ip;
-		this.bannedUntil = timestamp;
-	}
+  constructor({ message, endpoint }: { message: string; endpoint: string }) {
+    super({ endpoint, code: -1003, status: 418 });
+    const { ip, timestamp } = this.parseWeightResponse(message);
+    this.ip = ip;
+    this.bannedUntil = timestamp;
+  }
 
-	private parseWeightResponse(message: string) {
-		const match = message.match(/IP\(([^)]+)\).*?until (\d+)/);
+  private parseWeightResponse(message: string) {
+    const match = message.match(/IP\(([^)]+)\).*?until (\d+)/);
 
-		if (!match) {
-			throw new ErrorMessageParsingError("Can't parse weight data");
-		}
+    if (!match) {
+      throw new ErrorMessageParsingError("Can't parse weight data");
+    }
 
-		const ip = String(match[1]);
-		const timestamp = Number(match[2]);
-		return { ip, timestamp };
-	}
+    const ip = String(match[1]);
+    const timestamp = Number(match[2]);
+    return { ip, timestamp };
+  }
 }
 
 export class MalformedParamError extends ResponseError {
-	public param: string;
+  public param: string;
 
-	constructor({ message, endpoint }: { message: string; endpoint: string }) {
-		super({ endpoint, code: -1102, status: 400 });
-		const param = this.parseParam(message);
-		this.param = param;
-	}
+  constructor({ message, endpoint }: { message: string; endpoint: string }) {
+    super({ endpoint, code: -1102, status: 400 });
+    const param = this.parseParam(message);
+    this.param = param;
+  }
 
-	private parseParam(message: string) {
-		const match = message.match(/'([^']+)'/);
+  private parseParam(message: string) {
+    const match = message.match(/'([^']+)'/);
 
-		if (!match) {
-			throw new ErrorMessageParsingError("Can't parse param data");
-		}
+    if (!match) {
+      throw new ErrorMessageParsingError("Can't parse param data");
+    }
 
-		return String(match[1]);
-	}
+    return String(match[1]);
+  }
 }

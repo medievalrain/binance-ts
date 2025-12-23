@@ -1,53 +1,53 @@
 {
-	"name": "@medievalrain/binance-ts",
-	"version": "0.14.11",
-	"description": "Binance API SDK",
-	"access": "public",
-	"type": "module",
-	"license": "MIT",
-	"files": [
-		"dist"
-	],
-	"main": "./dist/index.mjs",
-	"module": "./dist/index.mjs",
-	"types": "./dist/index.d.mts",
-	"exports": {
-		".": "./dist/index.mjs",
-		"./package.json": "./package.json"
-	},
-	"scripts": {
-		"build": "tsdown",
-		"dev": "tsdown --watch",
-		"test": "vitest",
-		"gen:all": "NODE_OPTIONS='--localstorage-file=ls' ts-to-zod --all",
-		"lint": "oxlint",
-		"format": "prettier --check .",
-		"typecheck": "tsc"
-	},
-	"devDependencies": {
-		"@types/node": "25.0.3",
-		"dotenv": "17.2.3",
-		"oxlint": "1.35.0",
-		"prettier": "3.7.4",
-		"ts-to-zod": "5.1.0",
-		"tsdown": "0.18.2",
-		"typescript": "5.9.3",
-		"vitest": "4.0.16",
-		"zod": "4.2.1"
-	},
-	"dependencies": {
-		"@medievalrain/emitter": "0.8.10"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/medievalrain/binance-ts.git"
-	},
-	"packageManager": "pnpm@10.26.1",
-	"publishConfig": {
-		"access": "public",
-		"provenance": true
-	},
-	"engines": {
-		"node": ">=24.11.1"
-	}
+  "name": "@medievalrain/binance-ts",
+  "version": "0.14.11",
+  "description": "Binance API SDK",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/medievalrain/binance-ts.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest",
+    "gen:all": "NODE_OPTIONS='--localstorage-file=ls' ts-to-zod --all",
+    "lint": "oxlint",
+    "format": "oxfmt --check .",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@medievalrain/emitter": "0.8.10"
+  },
+  "devDependencies": {
+    "@types/node": "25.0.3",
+    "dotenv": "17.2.3",
+    "oxfmt": "0.20.0",
+    "oxlint": "1.35.0",
+    "ts-to-zod": "5.1.0",
+    "tsdown": "0.18.2",
+    "typescript": "5.9.3",
+    "vitest": "4.0.16",
+    "zod": "4.2.1"
+  },
+  "engines": {
+    "node": ">=24.11.1"
+  },
+  "packageManager": "pnpm@10.26.1",
+  "access": "public"
 }
