@@ -25,24 +25,24 @@
 		"typecheck": "tsc"
 	},
 	"devDependencies": {
-		"@types/node": "25.0.2",
+		"@types/node": "25.0.3",
 		"dotenv": "17.2.3",
-		"oxlint": "1.33.0",
+		"oxlint": "1.35.0",
 		"prettier": "3.7.4",
 		"ts-to-zod": "5.1.0",
-		"tsdown": "0.18.0",
+		"tsdown": "0.18.2",
 		"typescript": "5.9.3",
-		"vitest": "4.0.15",
-		"zod": "4.2.0"
+		"vitest": "4.0.16",
+		"zod": "4.2.1"
 	},
 	"dependencies": {
-		"@medievalrain/emitter": "0.8.7"
+		"@medievalrain/emitter": "0.8.10"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/medievalrain/binance-ts.git"
 	},
-	"packageManager": "pnpm@10.26.0",
+	"packageManager": "pnpm@10.26.1",
 	"publishConfig": {
 		"access": "public",
 		"provenance": true
