@@ -1,6 +1,6 @@
 {
   "name": "@medievalrain/binance-ts",
-  "version": "0.14.13",
+  "version": "0.14.14",
   "description": "Binance API SDK",
   "license": "MIT",
   "repository": {
