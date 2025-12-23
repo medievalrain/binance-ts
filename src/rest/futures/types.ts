@@ -56,8 +56,8 @@ export type FuturesExchangeInfoFilter =
       positionControlSide: "NONE";
     };
 
-export type FuturesContractType = "PERPETUAL" | "CURRENT_QUARTER" | "NEXT_QUARTER";
-export type FuturesUnderlyingType = "COIN" | "INDEX" | "PREMARKET";
+export type FuturesContractType = "PERPETUAL" | "CURRENT_QUARTER" | "NEXT_QUARTER"|"TRADIFI_PERPETUAL";
+export type FuturesUnderlyingType = "COIN" | "INDEX" | "PREMARKET"| "COMMODITY";
 
 export type FuturesOrderType =
   | "LIMIT"
@@ -68,7 +68,10 @@ export type FuturesOrderType =
   | "TAKE_PROFIT_MARKET"
   | "TRAILING_STOP_MARKET";
 
-export type PermissionSet = "COPY" | "GRID" | "DCA";
+export type FuturesPermissionSet =  'GRID'| 'COPY'| 'DCA' | 'PSB'|"RPI";
+
+export type FuturesTimeInForce = "GTC" | "IOC" | "FOK" | "GTX" | "GTD";
+
 
 export type FuturesExchangeInfoSymbol = {
   symbol: string;
@@ -88,14 +91,15 @@ export type FuturesExchangeInfoSymbol = {
   quotePrecision: number;
   underlyingType: FuturesUnderlyingType;
   underlyingSubType: string[];
-  permissionSets: PermissionSet[];
+  permissionSets: FuturesPermissionSet[];
   settlePlan?: number;
   triggerProtect: string;
   filters: FuturesExchangeInfoFilter[];
-  OrderType?: FuturesOrderType[];
-  timeInForce: string[];
+  orderTypes?: FuturesOrderType[];
+  timeInForce: FuturesTimeInForce[];
   liquidationFee: string;
   marketTakeBound: string;
+   maxMoveOrderLimit: number;
 };
 
 export type FuturesExchangeInfo = {
@@ -483,7 +487,8 @@ export type FuturesIncomeHistory = {
 export type FuturesOrderSide = "BUY" | "SELL";
 export type FuturesPositionSide = "BOTH" | "LONG" | "SHORT";
 
-export type FuturesTimeInForce = "GTC" | "IOC" | "FOK" | "GTX" | "GTD";
+
+
 export type FuturesWorkingType = "MARK_PRICE" | "CONTRACT_PRICE";
 export type FuturesNewOrderRespType = "ACK" | "RESULT";
 export type FuturesPriceMatch =

@@ -54,13 +54,15 @@ export const futuresExchangeInfoFilterSchema = z.union([z.object({
         positionControlSide: z.literal("NONE")
     })]);
 
-export const futuresContractTypeSchema = z.union([z.literal("PERPETUAL"), z.literal("CURRENT_QUARTER"), z.literal("NEXT_QUARTER")]);
+export const futuresContractTypeSchema = z.union([z.literal("PERPETUAL"), z.literal("CURRENT_QUARTER"), z.literal("NEXT_QUARTER"), z.literal("TRADIFI_PERPETUAL")]);
 
-export const futuresUnderlyingTypeSchema = z.union([z.literal("COIN"), z.literal("INDEX"), z.literal("PREMARKET")]);
+export const futuresUnderlyingTypeSchema = z.union([z.literal("COIN"), z.literal("INDEX"), z.literal("PREMARKET"), z.literal("COMMODITY")]);
 
 export const futuresOrderTypeSchema = z.union([z.literal("LIMIT"), z.literal("MARKET"), z.literal("STOP"), z.literal("TAKE_PROFIT"), z.literal("STOP_MARKET"), z.literal("TAKE_PROFIT_MARKET"), z.literal("TRAILING_STOP_MARKET")]);
 
-export const permissionSetSchema = z.union([z.literal("COPY"), z.literal("GRID"), z.literal("DCA")]);
+export const futuresPermissionSetSchema = z.union([z.literal("GRID"), z.literal("COPY"), z.literal("DCA"), z.literal("PSB"), z.literal("RPI")]);
+
+export const futuresTimeInForceSchema = z.union([z.literal("GTC"), z.literal("IOC"), z.literal("FOK"), z.literal("GTX"), z.literal("GTD")]);
 
 export const futuresExchangeInfoSymbolSchema = z.object({
     symbol: z.string(),
@@ -80,14 +82,15 @@ export const futuresExchangeInfoSymbolSchema = z.object({
     quotePrecision: z.number(),
     underlyingType: futuresUnderlyingTypeSchema,
     underlyingSubType: z.array(z.string()),
-    permissionSets: z.array(permissionSetSchema),
+    permissionSets: z.array(futuresPermissionSetSchema),
     settlePlan: z.number().optional(),
     triggerProtect: z.string(),
     filters: z.array(futuresExchangeInfoFilterSchema),
-    OrderType: z.array(futuresOrderTypeSchema).optional(),
-    timeInForce: z.array(z.string()),
+    orderTypes: z.array(futuresOrderTypeSchema).optional(),
+    timeInForce: z.array(futuresTimeInForceSchema),
     liquidationFee: z.string(),
-    marketTakeBound: z.string()
+    marketTakeBound: z.string(),
+    maxMoveOrderLimit: z.number()
 });
 
 export const futuresExchangeInfoSchema = z.object({
@@ -419,8 +422,6 @@ export const futuresIncomeHistorySchema = z.object({
 export const futuresOrderSideSchema = z.union([z.literal("BUY"), z.literal("SELL")]);
 
 export const futuresPositionSideSchema = z.union([z.literal("BOTH"), z.literal("LONG"), z.literal("SHORT")]);
-
-export const futuresTimeInForceSchema = z.union([z.literal("GTC"), z.literal("IOC"), z.literal("FOK"), z.literal("GTX"), z.literal("GTD")]);
 
 export const futuresWorkingTypeSchema = z.union([z.literal("MARK_PRICE"), z.literal("CONTRACT_PRICE")]);
 
