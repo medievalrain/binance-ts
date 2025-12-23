@@ -56,8 +56,12 @@ export type FuturesExchangeInfoFilter =
       positionControlSide: "NONE";
     };
 
-export type FuturesContractType = "PERPETUAL" | "CURRENT_QUARTER" | "NEXT_QUARTER"|"TRADIFI_PERPETUAL";
-export type FuturesUnderlyingType = "COIN" | "INDEX" | "PREMARKET"| "COMMODITY";
+export type FuturesContractType =
+  | "PERPETUAL"
+  | "CURRENT_QUARTER"
+  | "NEXT_QUARTER"
+  | "TRADIFI_PERPETUAL";
+export type FuturesUnderlyingType = "COIN" | "INDEX" | "PREMARKET" | "COMMODITY";
 
 export type FuturesOrderType =
   | "LIMIT"
@@ -68,10 +72,9 @@ export type FuturesOrderType =
   | "TAKE_PROFIT_MARKET"
   | "TRAILING_STOP_MARKET";
 
-export type FuturesPermissionSet =  'GRID'| 'COPY'| 'DCA' | 'PSB'|"RPI";
+export type FuturesPermissionSet = "GRID" | "COPY" | "DCA" | "PSB" | "RPI";
 
 export type FuturesTimeInForce = "GTC" | "IOC" | "FOK" | "GTX" | "GTD";
-
 
 export type FuturesExchangeInfoSymbol = {
   symbol: string;
@@ -99,7 +102,7 @@ export type FuturesExchangeInfoSymbol = {
   timeInForce: FuturesTimeInForce[];
   liquidationFee: string;
   marketTakeBound: string;
-   maxMoveOrderLimit: number;
+  maxMoveOrderLimit: number;
 };
 
 export type FuturesExchangeInfo = {
@@ -486,8 +489,6 @@ export type FuturesIncomeHistory = {
 
 export type FuturesOrderSide = "BUY" | "SELL";
 export type FuturesPositionSide = "BOTH" | "LONG" | "SHORT";
-
-
 
 export type FuturesWorkingType = "MARK_PRICE" | "CONTRACT_PRICE";
 export type FuturesNewOrderRespType = "ACK" | "RESULT";
