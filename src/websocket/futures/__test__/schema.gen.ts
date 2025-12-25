@@ -11,9 +11,15 @@ export const futuresBookTickerEventSchema = z.object({
 });
 
 export const futuresBookDepthEventSchema = z.object({
-    lastUpdateId: z.number(),
-    bids: z.array(z.tuple([z.string(), z.string()])),
-    asks: z.array(z.tuple([z.string(), z.string()]))
+    e: z.literal("depthUpdate"),
+    E: z.number(),
+    T: z.number(),
+    U: z.number(),
+    u: z.number(),
+    pu: z.number(),
+    s: z.string(),
+    b: z.array(z.tuple([z.string(), z.string()])),
+    a: z.array(z.tuple([z.string(), z.string()]))
 });
 
 export const futuresAggTradeEventSchema = z.object({

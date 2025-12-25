@@ -22,6 +22,7 @@ describe("Binance Futures WebSocket API - Market events", () => {
       const fn = vi.fn();
       client.aggTrade.on((event) => {
         fn();
+
         expect(event).toEqual(expect.schemaMatching(futuresAggTradeEventSchema));
       });
       await vi.waitFor(() => {
