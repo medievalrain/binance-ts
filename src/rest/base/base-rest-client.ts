@@ -44,7 +44,7 @@ export class BaseRestClient {
 
     const response = await fetch(url.toString(), requestOptions);
     const json = await response.json();
-    if (response.status === 200) {
+    if (response.ok) {
       return json as T;
     }
     throw this.parseErrorResponse(endpoint, response.status, json);
@@ -85,7 +85,7 @@ export class BaseRestClient {
     const response = await fetch(url.toString(), requestOptions);
 
     const json = await response.json();
-    if (response.status === 200) {
+    if (response.ok) {
       return json as T;
     }
     throw this.parseErrorResponse(endpoint, response.status, json);
