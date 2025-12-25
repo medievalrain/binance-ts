@@ -3,7 +3,6 @@ import { SpotRestClient } from "../client";
 import {
   spotCheckServerTimeSchema,
   spotExchangeInfoSchema,
-  spotExchangeInfoSymbolSchema,
   spotTestConnectivitySchema,
 } from "./schema.gen";
 
