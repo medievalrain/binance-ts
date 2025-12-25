@@ -6,3 +6,121 @@ export const spotTestConnectivitySchema = z.object({});
 export const spotCheckServerTimeSchema = z.object({
     serverTime: z.number()
 });
+
+export const spotExchangeInfoRateLimitSchema = z.union([z.object({
+        rateLimitType: z.literal("REQUEST_WEIGHT"),
+        interval: z.literal("MINUTE"),
+        intervalNum: z.number(),
+        limit: z.number()
+    }), z.object({
+        rateLimitType: z.literal("ORDERS"),
+        interval: z.literal("SECOND"),
+        intervalNum: z.number(),
+        limit: z.number()
+    }), z.object({
+        rateLimitType: z.literal("ORDERS"),
+        interval: z.literal("DAY"),
+        intervalNum: z.number(),
+        limit: z.number()
+    }), z.object({
+        rateLimitType: z.literal("RAW_REQUESTS"),
+        interval: z.literal("MINUTE"),
+        intervalNum: z.number(),
+        limit: z.number()
+    })]);
+
+export const spotOrderTypeSchema = z.union([z.literal("LIMIT"), z.literal("LIMIT_MAKER"), z.literal("MARKET"), z.literal("STOP_LOSS"), z.literal("STOP_LOSS_LIMIT"), z.literal("TAKE_PROFIT"), z.literal("TAKE_PROFIT_LIMIT")]);
+
+export const spotSelfTradePreventionModeSchema = z.union([z.literal("EXPIRE_TAKER"), z.literal("EXPIRE_MAKER"), z.literal("EXPIRE_BOTH"), z.literal("DECREMENT")]);
+
+export const spotExchangeInfoFilterSchema = z.union([z.object({
+        filterType: z.literal("PRICE_FILTER"),
+        minPrice: z.string(),
+        maxPrice: z.string(),
+        tickSize: z.string()
+    }), z.object({
+        filterType: z.literal("LOT_SIZE"),
+        minQty: z.string(),
+        maxQty: z.string(),
+        stepSize: z.string()
+    }), z.object({
+        filterType: z.literal("ICEBERG_PARTS"),
+        limit: z.number()
+    }), z.object({
+        filterType: z.literal("MARKET_LOT_SIZE"),
+        minQty: z.string(),
+        maxQty: z.string(),
+        stepSize: z.string()
+    }), z.object({
+        filterType: z.literal("TRAILING_DELTA"),
+        minTrailingAboveDelta: z.number(),
+        maxTrailingAboveDelta: z.number(),
+        minTrailingBelowDelta: z.number(),
+        maxTrailingBelowDelta: z.number()
+    }), z.object({
+        filterType: z.literal("PERCENT_PRICE_BY_SIDE"),
+        bidMultiplierUp: z.string(),
+        bidMultiplierDown: z.string(),
+        askMultiplierUp: z.string(),
+        askMultiplierDown: z.string(),
+        avgPriceMins: z.number()
+    }), z.object({
+        filterType: z.literal("NOTIONAL"),
+        minNotional: z.string(),
+        applyMinToMarket: z.boolean(),
+        maxNotional: z.string(),
+        applyMaxToMarket: z.boolean(),
+        avgPriceMins: z.number()
+    }), z.object({
+        filterType: z.literal("MAX_NUM_ORDERS"),
+        maxNumOrders: z.number()
+    }), z.object({
+        filterType: z.literal("MAX_NUM_ORDER_LISTS"),
+        maxNumOrderLists: z.number()
+    }), z.object({
+        filterType: z.literal("MAX_NUM_ALGO_ORDERS"),
+        maxNumAlgoOrders: z.number()
+    }), z.object({
+        filterType: z.literal("MAX_NUM_ORDER_AMENDS"),
+        maxNumOrderAmends: z.number()
+    }), z.object({
+        filterType: z.literal("MAX_POSITION"),
+        maxPosition: z.string()
+    })]);
+
+export const spotExchangeInfoSymbolSchema = z.object({
+    symbol: z.string(),
+    status: z.union([z.literal("TRADING"), z.literal("BREAK")]),
+    baseAsset: z.string(),
+    baseAssetPrecision: z.number(),
+    quoteAsset: z.string(),
+    quotePrecision: z.number(),
+    quoteAssetPrecision: z.number(),
+    baseCommissionPrecision: z.number(),
+    quoteCommissionPrecision: z.number(),
+    orderTypes: z.array(spotOrderTypeSchema),
+    icebergAllowed: z.boolean(),
+    ocoAllowed: z.boolean(),
+    otoAllowed: z.boolean(),
+    opoAllowed: z.boolean(),
+    quoteOrderQtyMarketAllowed: z.boolean(),
+    allowTrailingStop: z.boolean(),
+    cancelReplaceAllowed: z.boolean(),
+    amendAllowed: z.boolean(),
+    pegInstructionsAllowed: z.boolean(),
+    isSpotTradingAllowed: z.boolean(),
+    isMarginTradingAllowed: z.boolean(),
+    filters: z.array(spotExchangeInfoFilterSchema),
+    permissions: z.array(z.unknown()),
+    permissionSets: z.tuple([z.array(z.string())]),
+    defaultSelfTradePreventionMode: spotSelfTradePreventionModeSchema,
+    allowedSelfTradePreventionModes: z.array(spotSelfTradePreventionModeSchema)
+});
+
+export const spotExchangeInfoSchema = z.object({
+    timezone: z.string(),
+    serverTime: z.number(),
+    rateLimits: z.array(spotExchangeInfoRateLimitSchema),
+    exchangeFilters: z.array(z.unknown()),
+    symbols: z.array(spotExchangeInfoSymbolSchema)
+});

@@ -1,6 +1,6 @@
 import { BaseRestClient } from "@/rest/base/base-rest-client";
 
-import type { SpotCheckServerTime, SpotTestConnectivity } from "./types";
+import type { SpotCheckServerTime, SpotExchangeInfo, SpotTestConnectivity } from "./types";
 
 export class SpotRestClient extends BaseRestClient {
   constructor({
@@ -23,6 +23,12 @@ export class SpotRestClient extends BaseRestClient {
   public async checkServerTime(): Promise<SpotCheckServerTime> {
     return this.marketRequest<SpotCheckServerTime>({
       endpoint: "/api/v3/time",
+    });
+  }
+
+  public async exchangeInformation(): Promise<SpotExchangeInfo> {
+    return this.marketRequest<SpotExchangeInfo>({
+      endpoint: "/api/v3/exchangeInfo",
     });
   }
 }

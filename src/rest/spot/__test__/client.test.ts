@@ -1,6 +1,11 @@
 import { describe, it, beforeAll, expect } from "vitest";
 import { SpotRestClient } from "../client";
-import { spotCheckServerTimeSchema, spotTestConnectivitySchema } from "./schema.gen";
+import {
+  spotCheckServerTimeSchema,
+  spotExchangeInfoSchema,
+  spotExchangeInfoSymbolSchema,
+  spotTestConnectivitySchema,
+} from "./schema.gen";
 
 let client: SpotRestClient;
 
@@ -26,4 +31,11 @@ describe("Binance Spot Public REST API", () => {
       expect(response).toEqual(expect.schemaMatching(spotCheckServerTimeSchema.strict()));
     });
   });
-});
+
+  describe("/api/v3/exchangeInfo - Exchange Information", () => {
+    it("Should match schema", async () => {
+      const response = await client.exchangeInformation();
+      expect(response).toEqual(expect.schemaMatching(spotExchangeInfoSchema.strict()));
+    });
+  });
+}, 10000);
