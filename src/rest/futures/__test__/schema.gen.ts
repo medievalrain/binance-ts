@@ -64,13 +64,15 @@ export const futuresPermissionSetSchema = z.union([z.literal("GRID"), z.literal(
 
 export const futuresTimeInForceSchema = z.union([z.literal("GTC"), z.literal("IOC"), z.literal("FOK"), z.literal("GTX"), z.literal("GTD")]);
 
+export const futuresExchangeInfoSymbolTradingStatusSchema = z.union([z.literal("TRADING"), z.literal("SETTLING"), z.literal("PENDING_TRADING"), z.literal("DELIVERING")]);
+
 export const futuresExchangeInfoSymbolSchema = z.object({
     symbol: z.string(),
     pair: z.string(),
     contractType: futuresContractTypeSchema,
     deliveryDate: z.number(),
     onboardDate: z.number(),
-    status: z.union([z.literal("TRADING"), z.literal("SETTLING"), z.literal("PENDING_TRADING")]),
+    status: futuresExchangeInfoSymbolTradingStatusSchema,
     maintMarginPercent: z.string(),
     requiredMarginPercent: z.string(),
     baseAsset: z.string(),

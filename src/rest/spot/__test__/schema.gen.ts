@@ -88,9 +88,11 @@ export const spotExchangeInfoFilterSchema = z.union([z.object({
         maxPosition: z.string()
     })]);
 
+export const spotExchangeInfoSymbolTradingStatusSchema = z.union([z.literal("TRADING"), z.literal("BREAK")]);
+
 export const spotExchangeInfoSymbolSchema = z.object({
     symbol: z.string(),
-    status: z.union([z.literal("TRADING"), z.literal("BREAK")]),
+    status: spotExchangeInfoSymbolTradingStatusSchema,
     baseAsset: z.string(),
     baseAssetPrecision: z.number(),
     quoteAsset: z.string(),

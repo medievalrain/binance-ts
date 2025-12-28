@@ -76,13 +76,19 @@ export type FuturesPermissionSet = "GRID" | "COPY" | "DCA" | "PSB" | "RPI";
 
 export type FuturesTimeInForce = "GTC" | "IOC" | "FOK" | "GTX" | "GTD";
 
+export type FuturesExchangeInfoSymbolTradingStatus =
+  | "TRADING"
+  | "SETTLING"
+  | "PENDING_TRADING"
+  | "DELIVERING";
+
 export type FuturesExchangeInfoSymbol = {
   symbol: string;
   pair: string;
   contractType: FuturesContractType;
   deliveryDate: number;
   onboardDate: number;
-  status: "TRADING" | "SETTLING" | "PENDING_TRADING";
+  status: FuturesExchangeInfoSymbolTradingStatus;
   maintMarginPercent: string;
   requiredMarginPercent: string;
   baseAsset: string;

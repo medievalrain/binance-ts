@@ -71,9 +71,11 @@ export type SpotExchangeInfoFilter =
   | { filterType: "MAX_NUM_ORDER_AMENDS"; maxNumOrderAmends: number }
   | { filterType: "MAX_POSITION"; maxPosition: string };
 
+export type SpotExchangeInfoSymbolTradingStatus = "TRADING" | "BREAK";
+
 export type SpotExchangeInfoSymbol = {
   symbol: string;
-  status: "TRADING" | "BREAK";
+  status: SpotExchangeInfoSymbolTradingStatus;
   baseAsset: string;
   baseAssetPrecision: number;
   quoteAsset: string;
