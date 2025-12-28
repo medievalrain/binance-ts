@@ -46,7 +46,7 @@ export type FuturesAccountUpdateEventPosition = {
   bep: string;
   cr: string;
   up: string;
-  mt: "isolated" & string & {};
+  mt: "isolated" | (string & {});
   iw: string;
   ps: FuturesPositionSide;
 };

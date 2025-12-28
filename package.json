@@ -27,7 +27,7 @@
     "dev": "tsdown --watch",
     "test": "vitest",
     "gen:all": "NODE_OPTIONS='--localstorage-file=ls' ts-to-zod --all",
-    "lint": "oxlint",
+    "lint": "oxlint --type-aware",
     "format": "oxfmt --check .",
     "typecheck": "tsgo"
   },
@@ -40,6 +40,7 @@
     "dotenv": "17.2.3",
     "oxfmt": "0.20.0",
     "oxlint": "1.35.0",
+    "oxlint-tsgolint": "0.10.0",
     "ts-to-zod": "5.1.0",
     "tsdown": "0.18.3",
     "vitest": "4.0.16",

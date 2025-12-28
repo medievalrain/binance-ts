@@ -24,7 +24,7 @@ export type SubscriptionState = "SUBSCRIBED" | "PENDING_SUBSCRIPTION" | "PENDING
 export type OptArgs<
   CM extends ChannelsMap,
   K extends keyof CM,
-> = CM[K]["subscriptionOptions"] extends never | undefined
+> = CM[K]["subscriptionOptions"] extends never
   ? []
   : [options: CM[K]["subscriptionOptions"]];
 
