@@ -29,19 +29,19 @@
     "gen:all": "NODE_OPTIONS='--localstorage-file=ls' ts-to-zod --all",
     "lint": "oxlint",
     "format": "oxfmt --check .",
-    "typecheck": "tsc"
+    "typecheck": "tsgo"
   },
   "dependencies": {
     "@medievalrain/emitter": "0.8.10"
   },
   "devDependencies": {
     "@types/node": "25.0.3",
+    "@typescript/native-preview": "7.0.0-dev.20251227.1",
     "dotenv": "17.2.3",
     "oxfmt": "0.20.0",
     "oxlint": "1.35.0",
     "ts-to-zod": "5.1.0",
     "tsdown": "0.18.3",
-    "typescript": "5.9.3",
     "vitest": "4.0.16",
     "zod": "4.2.1"
   },
