@@ -4,5 +4,6 @@
   "rules": {
     "import/consistent-type-specifier-style": "error",
     "no-floating-promises": "off"
-  }
+  },
+  "ignorePatterns": ["*.gen.ts", "dist"]
 }
