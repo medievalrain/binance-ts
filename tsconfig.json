@@ -18,6 +18,8 @@
     "noUncheckedIndexedAccess": true,
     "moduleDetection": "force",
     "verbatimModuleSyntax": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "allowJs": false
   }
 }
