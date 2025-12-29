@@ -109,3 +109,9 @@ export type SpotExchangeInfo = {
   exchangeFilters: unknown[];
   symbols: SpotExchangeInfoSymbol[];
 };
+
+export type SpotOrderBook = {
+  lastUpdateId: number;
+  bids: [string, string][];
+  asks: [string, string][];
+};

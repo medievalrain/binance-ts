@@ -126,3 +126,9 @@ export const spotExchangeInfoSchema = z.object({
     exchangeFilters: z.array(z.unknown()),
     symbols: z.array(spotExchangeInfoSymbolSchema)
 });
+
+export const spotOrderBookSchema = z.object({
+    lastUpdateId: z.number(),
+    bids: z.array(z.tuple([z.string(), z.string()])),
+    asks: z.array(z.tuple([z.string(), z.string()]))
+});

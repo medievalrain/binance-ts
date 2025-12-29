@@ -1,6 +1,11 @@
 import { BaseRestClient } from "@/rest/base/base-rest-client";
 
-import type { SpotCheckServerTime, SpotExchangeInfo, SpotTestConnectivity } from "./types";
+import type {
+  SpotCheckServerTime,
+  SpotExchangeInfo,
+  SpotOrderBook,
+  SpotTestConnectivity,
+} from "./types";
 
 export class SpotRestClient extends BaseRestClient {
   constructor({
@@ -29,6 +34,13 @@ export class SpotRestClient extends BaseRestClient {
   public async exchangeInformation(): Promise<SpotExchangeInfo> {
     return this.marketRequest<SpotExchangeInfo>({
       endpoint: "/api/v3/exchangeInfo",
+    });
+  }
+
+  public async orderBook(params: { symbol: string; limit?: number }): Promise<SpotOrderBook> {
+    return this.marketRequest<SpotOrderBook>({
+      endpoint: "/api/v3/depth",
+      params,
     });
   }
 }

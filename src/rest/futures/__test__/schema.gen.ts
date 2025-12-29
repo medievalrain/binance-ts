@@ -379,7 +379,7 @@ export const futuresSymbolConfigSchema = z.object({
     marginType: z.union([z.literal("ISOLATED"), z.literal("CROSSED")]),
     isAutoAddMargin: z.boolean(),
     leverage: z.number(),
-    maxNotionalValue: z.union([z.string(), z.literal("INF")])
+    maxNotionalValue: z.string()
 });
 
 export const futuresUserRateLimitSchema = z.object({

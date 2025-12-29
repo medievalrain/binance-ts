@@ -429,7 +429,7 @@ export type FuturesSymbolConfig = {
   marginType: "ISOLATED" | "CROSSED";
   isAutoAddMargin: boolean;
   leverage: number;
-  maxNotionalValue: "INF" | (string & {});
+  maxNotionalValue: string;
 };
 
 export type FuturesUserRateLimit = {
