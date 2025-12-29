@@ -56,4 +56,4 @@ describe("Binance Spot Public REST API", () => {
       });
     });
   });
-}, 10000);
+});
