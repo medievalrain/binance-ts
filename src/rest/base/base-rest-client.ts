@@ -104,8 +104,7 @@ export class BaseRestClient {
     for (const [key, value] of Object.entries(rawParams)) {
       if (Array.isArray(value)) {
         searchParams.append(key, JSON.stringify(value));
-      }
-      if (value !== undefined && value !== null) {
+      } else if (value != null) {
         searchParams.append(key, String(value));
       }
     }
