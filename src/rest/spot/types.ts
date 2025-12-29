@@ -115,3 +115,13 @@ export type SpotOrderBook = {
   bids: [string, string][];
   asks: [string, string][];
 };
+
+export type SpotRecentTrade = {
+  id: number;
+  price: string;
+  qty: string;
+  quoteQty: string;
+  time: number;
+  isBuyerMaker: boolean;
+  isBestMatch: boolean;
+};

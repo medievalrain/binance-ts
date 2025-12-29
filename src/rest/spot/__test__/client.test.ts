@@ -4,6 +4,7 @@ import {
   spotCheckServerTimeSchema,
   spotExchangeInfoSchema,
   spotOrderBookSchema,
+  spotRecentTradeSchema,
   spotTestConnectivitySchema,
 } from "./schema.gen";
 
@@ -43,6 +44,16 @@ describe("Binance Spot Public REST API", () => {
     it("Should match schema", async () => {
       const response = await client.orderBook({ symbol: "BTCUSDT" });
       expect(response).toEqual(expect.schemaMatching(spotOrderBookSchema.strict()));
+    });
+  });
+
+  describe("/api/v3/trades - Recent Trades", () => {
+    it("Should match schema", async () => {
+      const response = await client.recentTrades({ symbol: "BTCUSDT" });
+      expect(Array.isArray(response)).toBe(true);
+      response.forEach((trade) => {
+        expect(trade).toEqual(expect.schemaMatching(spotRecentTradeSchema.strict()));
+      });
     });
   });
 }, 10000);

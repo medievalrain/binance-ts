@@ -132,3 +132,13 @@ export const spotOrderBookSchema = z.object({
     bids: z.array(z.tuple([z.string(), z.string()])),
     asks: z.array(z.tuple([z.string(), z.string()]))
 });
+
+export const spotRecentTradeSchema = z.object({
+    id: z.number(),
+    price: z.string(),
+    qty: z.string(),
+    quoteQty: z.string(),
+    time: z.number(),
+    isBuyerMaker: z.boolean(),
+    isBestMatch: z.boolean()
+});

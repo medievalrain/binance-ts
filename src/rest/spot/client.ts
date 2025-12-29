@@ -4,6 +4,7 @@ import type {
   SpotCheckServerTime,
   SpotExchangeInfo,
   SpotOrderBook,
+  SpotRecentTrade,
   SpotTestConnectivity,
 } from "./types";
 
@@ -40,6 +41,16 @@ export class SpotRestClient extends BaseRestClient {
   public async orderBook(params: { symbol: string; limit?: number }): Promise<SpotOrderBook> {
     return this.marketRequest<SpotOrderBook>({
       endpoint: "/api/v3/depth",
+      params,
+    });
+  }
+
+  public async recentTrades(params: {
+    symbol: string;
+    limit?: number;
+  }): Promise<SpotRecentTrade[]> {
+    return this.marketRequest<SpotRecentTrade[]>({
+      endpoint: "/api/v3/trades",
       params,
     });
   }
