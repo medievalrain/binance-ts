@@ -54,7 +54,7 @@ export const futuresExchangeInfoFilterSchema = z.union([z.object({
         positionControlSide: z.literal("NONE")
     })]);
 
-export const futuresContractTypeSchema = z.union([z.literal("PERPETUAL"), z.literal("CURRENT_QUARTER"), z.literal("NEXT_QUARTER"), z.literal("TRADIFI_PERPETUAL")]);
+export const futuresContractTypeSchema = z.union([z.literal("PERPETUAL"), z.literal("CURRENT_QUARTER"), z.literal("NEXT_QUARTER"), z.literal("TRADIFI_PERPETUAL"), z.literal("CURRENT_QUARTER DELIVERING")]);
 
 export const futuresUnderlyingTypeSchema = z.union([z.literal("COIN"), z.literal("INDEX"), z.literal("PREMARKET"), z.literal("COMMODITY")]);
 

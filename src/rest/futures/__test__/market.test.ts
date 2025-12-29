@@ -24,6 +24,7 @@ import {
   futuresCompositeIndexSchema,
   futuresAssetIndexSchema,
   futuresIndexPriceConstituentsSchema,
+  futuresExchangeInfoSymbolSchema,
 } from "./schema.gen";
 
 let client: FuturesRestClient;
@@ -53,10 +54,14 @@ describe("Binance Futures REST API - Public Endpoints", () => {
 
   describe("/fapi/v1/exchangeInfo - Exchange Information", () => {
     it("matches schema", async () => {
-      const res = await client.exchangeInformation();
-      expect(res).toEqual(expect.schemaMatching(futuresExchangeInfoSchema.strict()));
+      const response = await client.exchangeInformation();
+      response.symbols.forEach((symbol) => {
+        // To track individual symbol schema changes
+        expect(symbol).toEqual(expect.schemaMatching(futuresExchangeInfoSymbolSchema.strict()));
+      });
+      expect(response).toEqual(expect.schemaMatching(futuresExchangeInfoSchema.strict()));
     });
-  });
+  }, 10000);
 
   describe("/fapi/v1/depth - Order Book", () => {
     it("matches schema", async () => {
