@@ -1,6 +1,6 @@
 {
   "name": "@medievalrain/binance-ts",
-  "version": "0.19.10",
+  "version": "0.20.0",
   "description": "Binance API SDK",
   "license": "MIT",
   "repository": {
@@ -35,7 +35,6 @@
     "@medievalrain/emitter": "0.8.19"
   },
   "devDependencies": {
-    "@types/node": "25.0.10",
     "@typescript/native-preview": "7.0.0-dev.20260128.1",
     "dotenv": "17.2.3",
     "oxfmt": "0.27.0",
