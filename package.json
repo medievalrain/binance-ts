@@ -1,6 +1,6 @@
 {
   "name": "@medievalrain/binance-ts",
-  "version": "0.19.7",
+  "version": "0.19.10",
   "description": "Binance API SDK",
   "license": "MIT",
   "repository": {
@@ -32,15 +32,15 @@
     "typecheck": "tsgo"
   },
   "dependencies": {
-    "@medievalrain/emitter": "0.8.18"
+    "@medievalrain/emitter": "0.8.19"
   },
   "devDependencies": {
     "@types/node": "25.0.10",
-    "@typescript/native-preview": "7.0.0-dev.20260127.1",
+    "@typescript/native-preview": "7.0.0-dev.20260128.1",
     "dotenv": "17.2.3",
     "oxfmt": "0.27.0",
     "oxlint": "1.42.0",
-    "oxlint-tsgolint": "0.11.2",
+    "oxlint-tsgolint": "0.11.3",
     "ts-to-zod": "5.1.0",
     "tsdown": "0.20.1",
     "vitest": "4.0.18",
