@@ -5,20 +5,26 @@ export class BinanceRestClient {
   private _futures?: FuturesRestClient;
   private _spot?: SpotRestClient;
 
-  constructor(
-    private options?: {
-      apiKey?: string;
-      apiSecret?: string;
-      baseUrls?: { spot?: string; futures?: string };
-    },
-  ) {}
+  private apiKey?: string;
+  private apiSecret?: string;
+  private baseUrls?: { spot?: string; futures?: string };
+
+  constructor(options?: {
+    apiKey?: string;
+    apiSecret?: string;
+    baseUrls?: { spot?: string; futures?: string };
+  }) {
+    this.apiKey = options?.apiKey;
+    this.apiSecret = options?.apiSecret;
+    this.baseUrls = options?.baseUrls;
+  }
 
   get futures(): FuturesRestClient {
     if (!this._futures) {
       this._futures = new FuturesRestClient({
-        apiKey: this.options?.apiKey,
-        apiSecret: this.options?.apiSecret,
-        baseUrl: this.options?.baseUrls?.futures,
+        apiKey: this.apiKey,
+        apiSecret: this.apiSecret,
+        baseUrl: this.baseUrls?.futures,
       });
     }
     return this._futures;
@@ -27,7 +33,9 @@ export class BinanceRestClient {
   get spot(): SpotRestClient {
     if (!this._spot) {
       this._spot = new SpotRestClient({
-        baseUrl: this.options?.baseUrls?.spot,
+        apiKey: this.apiKey,
+        apiSecret: this.apiSecret,
+        baseUrl: this.baseUrls?.spot,
       });
     }
     return this._spot;

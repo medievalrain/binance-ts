@@ -8,7 +8,7 @@ import type {
   InferFutruresUserEvent,
   UserEventMap,
 } from "./types/user";
-import { FuturesRestClient } from "@/rest/futures/client";
+import { FuturesRestClient } from "../../rest/futures";
 
 export const createFuturesUserWebsocketClient = async ({
   baseUrl = "wss://fstream.binance.com/ws",

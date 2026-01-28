@@ -1,4 +1,3 @@
-import type { WebsocketClient } from "@/websocket/base/types";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import { createFuturesWebsocketClient } from "../client";
@@ -8,6 +7,7 @@ import {
   futuresBookDepthEventSchema,
   futuresBookTickerEventSchema,
 } from "./schema.gen";
+import type { WebsocketClient } from "../../base";
 
 let client: WebsocketClient<FuturesChannels>;
 

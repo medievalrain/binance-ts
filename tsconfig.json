@@ -4,9 +4,6 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "outDir": "./dist",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
     "isolatedDeclarations": false,
     "isolatedModules": true,
     "strict": true,
@@ -17,6 +14,7 @@
     "noUncheckedIndexedAccess": true,
     "moduleDetection": "force",
     "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
     "skipLibCheck": true,
     "noImplicitAny": true,
     "allowJs": false

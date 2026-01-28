@@ -1,4 +1,4 @@
-import { BaseRestClient } from "@/rest/base/base-rest-client";
+import { BaseRestClient } from "../base/base-rest-client";
 import type {
   FuturesCheckServerTime,
   FuturesExchangeInfo,
