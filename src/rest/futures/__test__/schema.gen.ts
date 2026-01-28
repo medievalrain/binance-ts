@@ -130,7 +130,8 @@ export const futuresAggregateTradeSchema = z.object({
     f: z.number(),
     l: z.number(),
     T: z.number(),
-    m: z.boolean()
+    m: z.boolean(),
+    nq: z.string()
 });
 
 export const futuresKlineIntervalSchema = z.union([z.literal("1s"), z.literal("1m"), z.literal("3m"), z.literal("5m"), z.literal("30m"), z.literal("1h"), z.literal("2h"), z.literal("6h"), z.literal("8h"), z.literal("12h"), z.literal("3d"), z.literal("1M")]);

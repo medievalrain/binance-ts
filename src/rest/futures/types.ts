@@ -148,6 +148,7 @@ export type FuturesAggregateTrade = {
   l: number;
   T: number;
   m: boolean;
+  nq: string;
 };
 
 export type FuturesKlineInterval =
