@@ -62,7 +62,7 @@ export type FuturesContractType =
   | "NEXT_QUARTER"
   | "TRADIFI_PERPETUAL"
   | "CURRENT_QUARTER DELIVERING";
-export type FuturesUnderlyingType = "COIN" | "INDEX" | "PREMARKET" | "COMMODITY";
+export type FuturesUnderlyingType = "COIN" | "INDEX" | "PREMARKET" | "COMMODITY" | "EQUITY";
 
 export type FuturesOrderType =
   | "LIMIT"
