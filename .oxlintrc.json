@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["import", "typescript", "unicorn", "oxc", "node", "promise", "vitest"],
+  "plugins": ["import", "typescript", "unicorn", "oxc", "node", "promise", "vitest", "eslint"],
   "rules": {
     "import/consistent-type-specifier-style": "error",
     "no-floating-promises": "off"
